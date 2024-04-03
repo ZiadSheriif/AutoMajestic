@@ -42,7 +42,7 @@ class RegexValidator:
                         regex = regex[: j + 1] + "|" + regex[j + 1 :]
                     j += 1
 
-        # then , replace the character class with the new alternation
+        # then, replace the character class with the new alternation
         regex = regex.replace("[", "(").replace("]", ")")
         print(regex)
 
@@ -57,18 +57,38 @@ class RegexValidator:
         hyphens_count = regex_copy.count("-")
         print("hyphens_count: ", hyphens_count)
         print("regex_copy: ", len(regex_copy))
-        for j in range(len(regex_copy)):
+        for i in range(hyphens_count):
+            for j in range(len(regex_copy)):
                 operator = regex_copy[j]
                 # if (a-z) ==> (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)
                 if operator == "-":
                     temp = ""
-                    end = ord(regex[j + 1])
-                    start = ord(regex[j - 1])
+                    end = ord(regex_copy[j + 1])
+                    start = ord(regex_copy[j - 1])
+                    print("start: ", start)
+                    print("end: ", end)
+                    print("regex[j]: ", regex_copy)
+                    print("regex[j - 1]: ", regex_copy[j - 1])
+                    print("regex[j + 1]: ", regex_copy[j + 1])
                     for z in range(int(end - start)):
                         temp += "|"
                         char = chr(start + z + 1)
-                        print("char: ", char)
                         temp += char
-                    regex = regex[0:j] + temp + regex[j + 2 :]
-                    # break
-        print("regex after replacing hyphens with alternation: ", regex)
+                    regex_copy = regex_copy[0:j] + temp + regex_copy[j + 2 :]
+                    break
+        print("regex after replacing hyphens with alternation: ", regex_copy)
+
+        # insert . operator between adjacent characters
+        dots_container = []
+        start_ops = ["*", "+", ")"]
+        end_ops = ["*", "+", ")", "|", "."]
+
+        for i in range(len(regex_copy) - 1):
+            if regex_copy[i].isalnum() and regex_copy[i + 1].isalnum():
+                dots_container.append(i)
+            elif regex_copy[i] in start_ops and regex_copy[i + 1] not in end_ops:
+                dots_container.append(i)
+
+        for i in dots_container:
+            regex_copy = regex_copy[: i + 1] + "." + regex_copy[i + 1 :]
+        return regex_copy
