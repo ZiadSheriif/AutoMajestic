@@ -16,17 +16,7 @@ class RegexValidator:
     def post_validate(self):
         # we will order regular expressions syntax is listed as in the documentation
         # supported regex syntax
-        operators = {
-            "|": 1,
-            ".": 2,
-            "?": 3,
-            "*": 3,
-            "+": 3,
-            "^": 4,
-            "$": 4,
-            "(": 5,
-            ")": 5,
-        }
+        operators = {"(":0,"|": 1, ".": 2, "?": 3, "+": 4, "*": 5}
         regex = self.regex
 
         # Check if the regular expression contains any character classes (denoted by square brackets).
@@ -52,43 +42,71 @@ class RegexValidator:
         # replace hyphen with operator "|" to separate the range of characters in the character class
         # as example: [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
         # as example: [a-z] will be converted to (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z) and so on.
-        regex_copy = regex[:]
-        print(regex_copy)
-        hyphens_count = regex_copy.count("-")
+        self.postfix = regex[:]
+        print(self.postfix)
+        hyphens_count = self.postfix.count("-")
         print("hyphens_count: ", hyphens_count)
-        print("regex_copy: ", len(regex_copy))
+        print("self.postfix: ", len(self.postfix))
         for i in range(hyphens_count):
-            for j in range(len(regex_copy)):
-                operator = regex_copy[j]
+            for j in range(len(self.postfix)):
+                operator = self.postfix[j]
                 # if (a-z) ==> (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)
                 if operator == "-":
                     temp = ""
-                    end = ord(regex_copy[j + 1])
-                    start = ord(regex_copy[j - 1])
+                    end = ord(self.postfix[j + 1])
+                    start = ord(self.postfix[j - 1])
                     print("start: ", start)
                     print("end: ", end)
-                    print("regex[j]: ", regex_copy)
-                    print("regex[j - 1]: ", regex_copy[j - 1])
-                    print("regex[j + 1]: ", regex_copy[j + 1])
+                    print("regex[j]: ", self.postfix)
+                    print("regex[j - 1]: ", self.postfix[j - 1])
+                    print("regex[j + 1]: ", self.postfix[j + 1])
                     for z in range(int(end - start)):
                         temp += "|"
                         char = chr(start + z + 1)
                         temp += char
-                    regex_copy = regex_copy[0:j] + temp + regex_copy[j + 2 :]
+                    self.postfix = self.postfix[0:j] + temp + self.postfix[j + 2 :]
                     break
-        print("regex after replacing hyphens with alternation: ", regex_copy)
+        print("regex after replacing hyphens with alternation: ", self.postfix)
 
         # insert . operator between adjacent characters
         dots_container = []
-        start_ops = ["*", "+", ")"]
-        end_ops = ["*", "+", ")", "|", "."]
+        start_ops = [")", "*", "+","*"]
+        end_ops = ["*", "+",".", "|", ")"]
 
-        for i in range(len(regex_copy) - 1):
-            if regex_copy[i].isalnum() and regex_copy[i + 1].isalnum():
+        for i in range(len(self.postfix) - 1):
+            if self.postfix[i].isalnum() and self.postfix[i + 1].isalnum():
                 dots_container.append(i)
-            elif regex_copy[i] in start_ops and regex_copy[i + 1] not in end_ops:
+            elif self.postfix[i] in start_ops and self.postfix[i + 1] not in end_ops:
                 dots_container.append(i)
 
         for i in dots_container:
-            regex_copy = regex_copy[: i + 1] + "." + regex_copy[i + 1 :]
-        return regex_copy
+            self.postfix = self.postfix[: i + 1] + "." + self.postfix[i + 1 :]
+
+        ############################################################
+        ############################################################
+
+        # apply the shunting yard algorithm to convert the infix regular expression to postfix
+        stack = []
+        postfix = ""
+        for i in range(len(self.postfix)):
+            operator = self.postfix[i]
+            if operator == "(":
+                stack.append(operator)
+            elif operator == ")":
+                while stack[-1] != "(":
+                    postfix += stack.pop()
+                stack.pop() # remove the left parenthesis '('
+            elif operator in operators:
+                while stack and operators[operator] <= operators[stack[-1]]:
+                    postfix += stack.pop() 
+                stack.append(operator)
+            else:
+                postfix += operator
+            print("stack: ", stack)
+            print("postfix: ", postfix)
+        while stack:
+            postfix += stack.pop()
+
+        print("final postfix: ", postfix)
+
+        return postfix
