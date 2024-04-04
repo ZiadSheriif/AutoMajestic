@@ -24,12 +24,11 @@ class NFA:
             state = queue.pop(0)
             print("state: ", state.label)
             states.append(state)
-            for  (transition) in state.transitions:
+            for (transition) in state.transitions:
                 if transition[1] not in visited:
                     queue.append(transition[1])
                     visited.add(transition[1])
             
-                   
         return states
 
     def _get_accepting_states(self):
@@ -58,13 +57,13 @@ class NFA:
         nf_stack = []
         i = 0
         for char in postfix:
-            if char == "*" or char == "+":
+            if char == "*":
                 state_1 = nf_stack.pop()
                 start = State("S" + str(i))
                 accept = State("S" + str(i + 1))
                 start.add_transition("ε", state_1.start)
                 start.add_transition("ε", accept)
-                state_1.accept.add_transition("ε", state_1.start)
+                state_1.accept.add_transition("ε", start)
                 state_1.accept.add_transition("ε", accept)
                 nf_stack.append(NFA(start, accept))
                 i += 2
@@ -85,7 +84,17 @@ class NFA:
                 state_1 = nf_stack.pop()
                 state_1.accept.add_transition("ε", state_2.start)
                 nf_stack.append(NFA(state_1.start, state_2.accept))
+                
+            elif char == "+":
+                state_1 = nf_stack.pop()
+                start = State("S" + str(i))
+                accept = State("S" + str(i + 1))
+                start.add_transition("ε", state_1.start)
+                state_1.accept.add_transition("ε", start)
+                state_1.accept.add_transition("ε", accept)
+                nf_stack.append(NFA(start, accept))
                 i += 2
+            
             elif char == "?":
                 state_1 = nf_stack.pop()
                 start = State("S" + str(i))
@@ -110,7 +119,7 @@ class NFA:
         states = {}
         for state in self._get_states():
             state_graph = {
-                "isTerminateState": state.is_accepting,
+                "isTerminatingState": state.is_accepting,
             }
             for symbol, transition in state.transitions:
                 if symbol not in state_graph:
@@ -119,34 +128,31 @@ class NFA:
                     state_graph[symbol] += "," + transition.label
             states[state.label] = state_graph
 
-            return {
-                "startingState": self.start.label,
-                **states,
-            }
-            
-        
-    def visualize(self,name="output/nfa.gv",view=False):
+        return {
+            "startingState": self.start.label,
+            **states,
+        }
+
+    def visualize(self, name="output/nfa.gv", view=False):
         nfa_graph = self.to_graph()
         graph = graphviz.Digraph(engine="dot")
-        
+
         for state, transitions in nfa_graph.items():
             if state == "startingState":
                 continue
-            if transitions["isTerminateState"]:
+            if transitions["isTerminatingState"]:
                 graph.node(state, shape="doublecircle")
             else:
                 graph.node(state, shape="circle")
                 
                 
             for symbol, next_state in transitions.items():
-                if symbol == "isTerminateState":
+                if symbol == "isTerminatingState":
                     continue
                 children = next_state.split(",")
                 for child in children:
                     graph.edge(state, child, label=symbol)
-                
-                
 
         graph.render(name, view=view)
-        
+
         return graph
