@@ -1,0 +1,10 @@
+digraph {
+	S0 [shape=circle]
+	S0 -> S1 [label=a]
+	S0 -> S3 [label=b]
+	S0 -> S2 [label="ε"]
+	S0 -> S5 [label="ε"]
+	S0 -> S2 [label="ε"]
+	S0 -> S5 [label="ε"]
+	S0 -> S4 [label="ε"]
+}
