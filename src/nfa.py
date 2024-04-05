@@ -1,5 +1,6 @@
 from src.state import State
 import graphviz
+import json
 
 class NFA:
     def __init__(self, start=None, accept=None, postfix=None):
@@ -134,13 +135,18 @@ class NFA:
                 else:
                     state_graph[symbol] += "," + transition.label
             states[state.label] = state_graph
-
+              
+        # make a json object of the NFA graph
+        with open("output/nfa/nfa.json", "w") as f:
+            json.dump({"startingState": self.start.label, **states}, f)
+            
+            
         return {
             "startingState": self.start.label,
             **states,
         }
 
-    def visualize(self, name="output/nfa.gv", view=False):
+    def visualize(self, name="output/nfa/nfa.gv", view=False):
         nfa_graph = self.to_graph()
         graph = graphviz.Digraph(engine="dot")
 
