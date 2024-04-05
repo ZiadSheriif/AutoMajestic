@@ -21,13 +21,18 @@ class NFA:
         queue = [self.start]
         visited.add(self.start)
         while queue:
-            state = queue.pop(0)
-            print("state: ", state.label)
-            states.append(state)
-            for (transition) in state.transitions:
-                if transition[1] not in visited:
-                    queue.append(transition[1])
-                    visited.add(transition[1])
+            current_state = queue.pop(0)
+            print("state: ", current_state.label)
+            print ("Transitions of current state: ", [state.label for symbol, state in current_state.transitions])
+            states.append(current_state)
+            print("Labels of States: ", [state.label for state in states])
+            for _,state in current_state.transitions:
+                if state not in visited:
+                    queue.append(state)
+                    visited.add(state)
+        
+        states.sort(key=lambda x: x.label)
+        print("Final Labels of States: ", [state.label for state in states])
             
         return states
 
@@ -54,64 +59,66 @@ class NFA:
         return list(symbols)
 
     def construct_nfa(self, postfix):
-        nf_stack = []
+        nfa_stack = []
         i = 0
         for char in postfix:
             if char == "*":
-                state_1 = nf_stack.pop()
+                state_1 = nfa_stack.pop()
                 start = State("S" + str(i))
                 accept = State("S" + str(i + 1))
                 start.add_transition("ε", state_1.start)
                 start.add_transition("ε", accept)
                 state_1.accept.add_transition("ε", start)
                 state_1.accept.add_transition("ε", accept)
-                nf_stack.append(NFA(start, accept))
+                nfa_stack.append(NFA(start, accept))
                 i += 2
 
             elif char == "|":
-                state_2 = nf_stack.pop()
-                state_1 = nf_stack.pop()
+                state_2 = nfa_stack.pop()
+                state_1 = nfa_stack.pop()
                 start = State("S" + str(i))
                 accept = State("S" + str(i + 1))
                 start.add_transition("ε", state_1.start)
                 start.add_transition("ε", state_2.start)
                 state_1.accept.add_transition("ε", accept)
                 state_2.accept.add_transition("ε", accept)
-                nf_stack.append(NFA(start, accept))
+                nfa_stack.append(NFA(start, accept))
                 i += 2
             elif char == ".":
-                state_2 = nf_stack.pop()
-                state_1 = nf_stack.pop()
+                state_2 = nfa_stack.pop()
+                state_1 = nfa_stack.pop()
+                print("state_1: ", state_1.start.label)
+                print("state_2: ", state_2.start.label)
                 state_1.accept.add_transition("ε", state_2.start)
-                nf_stack.append(NFA(state_1.start, state_2.accept))
+                nfa_stack.append(NFA(state_1.start, state_2.accept))
                 
             elif char == "+":
-                state_1 = nf_stack.pop()
+                state_1 = nfa_stack.pop()
                 start = State("S" + str(i))
                 accept = State("S" + str(i + 1))
                 start.add_transition("ε", state_1.start)
                 state_1.accept.add_transition("ε", start)
                 state_1.accept.add_transition("ε", accept)
-                nf_stack.append(NFA(start, accept))
+                nfa_stack.append(NFA(start, accept))
                 i += 2
             
             elif char == "?":
-                state_1 = nf_stack.pop()
+                state_1 = nfa_stack.pop()
                 start = State("S" + str(i))
                 accept = State("S" + str(i + 1))
                 start.add_transition("ε", state_1.start)
                 start.add_transition("ε", accept)
                 state_1.accept.add_transition("ε", accept)
-                nf_stack.append(NFA(start, accept))
+                nfa_stack.append(NFA(start, accept))
                 i += 2
             else:
                 start = State("S" + str(i))
                 accept = State("S" + str(i + 1))
                 start.add_transition(char, accept)
-                nf_stack.append(NFA(start, accept))
+                nfa_stack.append(NFA(start, accept))
                 i += 2
 
-        return nf_stack.pop()
+        return nfa_stack.pop()
         # Convert the regex to an NFA using Thompson's construction algorithm
 
     def to_graph(self):
