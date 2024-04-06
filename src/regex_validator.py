@@ -95,7 +95,7 @@ class RegexValidator:
             elif operator == ")":
                 while stack[-1] != "(":
                     postfix += stack.pop()
-                stack.pop() # remove the left parenthesis '('
+                stack.pop() #! ==> remove the left parenthesis '('
             elif operator in operators:
                 while stack and operators[operator] <= operators[stack[-1]]:
                     postfix += stack.pop() 

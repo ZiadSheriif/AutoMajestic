@@ -1,6 +1,6 @@
 from src.state import State
+from utils.helpers import dump_nfa
 import graphviz
-import json
 
 class NFA:
     def __init__(self, start=None, accept=None, postfix=None):
@@ -137,8 +137,7 @@ class NFA:
             states[state.label] = state_graph
               
         # make a json object of the NFA graph
-        with open("output/nfa/nfa.json", "w") as f:
-            json.dump({"startingState": self.start.label, **states}, f)
+        dump_nfa({"startingState": self.start.label, **states}, "output/nfa/nfa.json")
             
             
         return {
