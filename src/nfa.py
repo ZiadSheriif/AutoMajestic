@@ -16,7 +16,7 @@ class NFA:
             if state.label == label:
                 return state
 
-    def _get_states(self):
+    def get_states(self):
         states = []
         visited = set()
         queue = [self.start]
@@ -52,7 +52,7 @@ class NFA:
 
     def _get_symbols(self):
         symbols = set()
-        states = self._get_states()
+        states = self.get_states()
         for state in states:
             for symbol in state.transitions.keys():
                 if symbol != "ε":
@@ -125,7 +125,7 @@ class NFA:
     def to_graph(self):
 
         states = {}
-        for state in self._get_states():
+        for state in self.get_states():
             state_graph = {
                 "isTerminatingState": state.is_accepting,
             }
