@@ -4,37 +4,47 @@
 
 from src.regex_validator import RegexValidator
 from src.nfa import NFA
+from src.dfa import DFA
 from utils.helpers import create_directory
+
+
+def run_pipeline(test_cases):
+    # Create the output directories if they don't exist
+    create_directory("output/nfa")
+    create_directory("output/dfa")
+
+    for idx, test_case in enumerate(test_cases, start=1):
+        print(f"##########  TEST CASE {idx}  #############")
+        print("Regex:", test_case)
+
+        # Validate the regex
+        regex_validator = RegexValidator(test_case)
+
+        if not regex_validator.validate():
+            continue
+
+        # Convert the regex to postfix notation
+        postfix_regex = regex_validator.post_validate()
+        print("Postfix notation:", postfix_regex)
+
+        # Convert the regex to an NFA
+        nfa = NFA(postfix=postfix_regex)
+        print("NFA ", nfa.to_graph())
+        nfa.visualize(name=f"output/nfa/nfa_{idx}.gv", view=False)
+
+        # Convert the NFA to a DFA
+        # dfa = DFA(nfa)
+
+        # Minimize the DFA
+        # minimized_dfa = dfa.minimize()
+
 
 if __name__ == "__main__":
 
-    # Create the output directories
-    create_directory("output/nfa")
-    create_directory("output/dfa")
-    
-    # Validate the regex
-    print("##########  VALIDATION  #############")
-    regex_one = RegexValidator(r"ab(c|d)")
-    regex_two = RegexValidator(r"ab[c-d")
-    regex_three = RegexValidator(r"ab*")
-    
-    
-    if regex_three.validate():
-        print("Regex is valid")
-    else:
-        print("Regex is invalid")
-        raise Exception("Invalid regex")
-    
-    
-    
-    # convert the regex to postfix notation
-    postfix_regex = regex_three.post_validate()
-    
-    # Convert the regex to an NFA
-    nfa = NFA(postfix=postfix_regex)
-    print("NFA ",nfa.to_graph())
-    nfa.visualize(name="output/nfa/nfa.gv",view=False)
-    
-    
-    
-    
+    test_cases = [
+        r"ab[ce-df]",
+        r"ab[ce-df",
+        r"ab*",
+    ]
+
+    run_pipeline(test_cases)
