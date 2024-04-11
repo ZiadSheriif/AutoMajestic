@@ -40,10 +40,13 @@ def run_pipeline(regex):
     return nfa
 
 
-@app.route("/compile/<regex>", methods=["GET"])
-def compile_regex(regex):
+@app.route("/compile", methods=["GET"])
+def compile_regex():
+
+    regex = request.args.get("regex")
 
     nfa = run_pipeline(regex)
+
     if nfa is None:
         return "Invalid regex", 400
 
