@@ -46,18 +46,21 @@ const Home = () => {
           setImage(data_nfa);
         } else if (isError_nfa) {
           toast.error("This Regex is invalid");
+          setImage("");
         }
       } else if (type == "DFA") {
         if (data_dfa) {
           setImage(data_dfa);
         } else if (isError_dfa) {
           toast.error("This Regex is invalid");
+          setImage("");
         }
       } else if (type == "MIN-DFA") {
         if (data_min_dfa) {
           setImage(data_min_dfa);
         } else if (isError_min_dfa) {
           toast.error("This Regex is invalid");
+          setImage("");
         }
       }
     }
