@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 
 const Home = () => {
   const [regex, setRegex] = useState("");
+  const [nfaImage, setNfaImage] = useState();
 
   const {
     nfa,
@@ -19,7 +20,7 @@ const Home = () => {
 
   useEffect(() => {
     if (data_nfa) {
-      console.log(data_nfa);
+      setNfaImage(data_nfa);
     }
   }, [data_nfa]);
 
@@ -44,7 +45,9 @@ const Home = () => {
           Get Nfa
         </Button>
       </InputContainer>
-      <ImageContainer></ImageContainer>
+      <ImageContainer>
+        {nfaImage && <img src={"data:image/png;base64," + nfaImage.image} />}
+      </ImageContainer>
     </Container>
   );
 };
