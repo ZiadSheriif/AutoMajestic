@@ -1,6 +1,7 @@
 # imports
-from flask import Flask, send_file, request
+from flask import Flask, send_file, request, jsonify
 import fitz
+import base64
 from flask_cors import CORS, cross_origin
 from src.regex_validator import RegexValidator
 from src.nfa import NFA
@@ -57,10 +58,10 @@ def compile_regex():
 
     pdf_to_png("output/nfa/nfa.gv.pdf", "output/nfa/nfa{}.png")
 
-    return send_file("output/nfa/nfa0.png", mimetype="image/png")
+    # return send_file("output/nfa/nfa.png", mimetype="image/png")
 
     # ? in case of using base64 encoding
-    with open("output/nfa/nfa.png", "rb") as f:
+    with open("output/nfa/nfa0.png", "rb") as f:
         image_data = f.read()
         encoded_image = base64.b64encode(image_data).decode("utf-8")
 
