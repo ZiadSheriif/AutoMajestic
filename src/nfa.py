@@ -11,8 +11,8 @@ class NFA:
             self.start = self.nfa.start
             self.accept = self.nfa.accept
 
-    def _get_state_by_label(self, label):
-        for state in self._get_states():
+    def get_state_by_label(self, label):
+        for state in self.get_states():
             if state.label == label:
                 return state
 
@@ -23,40 +23,41 @@ class NFA:
         visited.add(self.start)
         while queue:
             current_state = queue.pop(0)
-            print("state: ", current_state.label)
-            print ("Transitions of current state: ", [state.label for symbol, state in current_state.transitions])
+            # print("state: ", current_state.label)
+            # print ("Transitions of current state: ", [state.label for symbol, state in current_state.transitions])
             states.append(current_state)
-            print("Labels of States: ", [state.label for state in states])
+            # print("Labels of States: ", [state.label for state in states])
             for _,state in current_state.transitions:
                 if state not in visited:
                     queue.append(state)
                     visited.add(state)
         
         states.sort(key=lambda x: x.label)
-        print("Final Labels of States: ", [state.label for state in states])
+        # print("Final Labels of States: ", [state.label for state in states])
             
         return states
 
-    def _get_accepting_states(self):
-        return [state for state in self._get_states() if state.is_accepting]
+    def get_accepting_states(self):
+        return [state for state in self.get_states() if state.is_accepting]
 
-    def _check_acceptance(self, state):
-        return state in self._get_accepting_states()
+    def check_acceptance(self, state):
+        return state in self.get_accepting_states()
 
-    def _get_states_by_label(self, labels):
+    def get_states_by_label(self, labels):
         labels = labels.split(",")
         states_by_label = []
         for label in labels:
-            states_by_label.append(self._get_state_by_label(label))
+            states_by_label.append(self.get_state_by_label(label))
         return states_by_label
 
-    def _get_symbols(self):
+    def get_symbols(self):
         symbols = set()
         states = self.get_states()
         for state in states:
-            for symbol in state.transitions.keys():
+            for symbol, _ in state.transitions:
                 if symbol != "ε":
                     symbols.add(symbol)
+        print("Symbols: ", list(symbols))
         return list(symbols)
 
     def construct_nfa(self, postfix):

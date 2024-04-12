@@ -8,11 +8,14 @@ class RegexValidator:
 
     def validate(self):
         try:
+            if self.regex.count('[') != self.regex.count(']'):
+                print("Invalid regular expression: unmatched brackets")
+                return False
             re.compile(self.regex)
-            return True
         except re.error:
             print("Invalid regex:" , self.regex)
             return False
+        return True
 
     def post_validate(self):
         # we will order regular expressions syntax is listed as in the documentation
