@@ -20,5 +20,8 @@ export const ImageContainer = styled(Box)(() => ({
   width: "50%",
   minHeight: "100vh",
   backgroundColor: "#eee",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   "@media screen and (max-width: 768px)": {},
 }));
