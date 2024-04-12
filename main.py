@@ -12,6 +12,7 @@ def run_pipeline(test_cases):
     # Create the output directories if they don't exist
     create_directory("output/nfa")
     create_directory("output/dfa")
+    create_directory("output/min-dfa")
 
     for idx, test_case in enumerate(test_cases, start=1):
         print(f"##########  TEST CASE {idx}  #############")
