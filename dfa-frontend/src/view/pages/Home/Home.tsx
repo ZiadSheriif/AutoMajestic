@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useCompile } from "../../../presenter/useCompile";
 import TextField from "../../components/TextField/TextField";
 import {
@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 
 const Home = () => {
   const [regex, setRegex] = useState("");
+  const [type, setType] = useState("NFA");
   const [image, setImage] = useState();
 
   const {
@@ -36,10 +37,20 @@ const Home = () => {
   } = useCompile();
 
   useEffect(() => {
-    if (data_nfa) {
-      setImage(data_nfa);
+    if (type == "NFA") {
+      if (data_nfa) {
+        setImage(data_nfa);
+      }
+    } else if (type == "DFA") {
+      if (data_dfa) {
+        setImage(data_dfa);
+      }
+    } else if (type == "MIN-DFA") {
+      if (data_min_dfa) {
+        setImage(data_min_dfa);
+      }
     }
-  }, [data_nfa]);
+  }, [data_nfa, data_dfa, data_min_dfa]);
 
   useEffect(() => {
     if (isError_nfa) {
@@ -48,14 +59,17 @@ const Home = () => {
   }, [isError_nfa]);
 
   const handleGetNfa = () => {
+    setType("NFA");
     nfa(regex);
   };
 
   const handleGetDfa = () => {
+    setType("DFA");
     dfa(regex);
   };
 
   const handleGetMinDfa = () => {
+    setType("MIN-DFA");
     minDfa(regex);
   };
 
@@ -81,7 +95,12 @@ const Home = () => {
         </ButtonsContainer>
       </InputContainer>
       <ImageContainer>
-        {image && <img src={"data:image/png;base64," + image.image} />}
+        {image && (
+          <Box>
+            <Typography>{type}</Typography>
+            <img src={"data:image/png;base64," + image.image} />
+          </Box>
+        )}
       </ImageContainer>
     </Container>
   );

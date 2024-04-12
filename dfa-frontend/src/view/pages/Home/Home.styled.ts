@@ -7,7 +7,11 @@ export const Container = styled(Box)(() => ({
   justifyContent: "space-around",
   alignItems: "center",
   gap: "10px",
-  "@media screen and (max-width: 768px)": {},
+  "@media screen and (max-width: 768px)": {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 export const ButtonsContainer = styled(Box)(() => ({
@@ -22,7 +26,12 @@ export const ButtonsContainer = styled(Box)(() => ({
 export const InputContainer = styled(Box)(() => ({
   width: "30%",
   height: "100%",
-  "@media screen and (max-width: 768px)": {},
+  borderRadius: "10px",
+  padding: "10px",
+  boxShadow: "0px 0px 10px 1px gray",
+  "@media screen and (max-width: 768px)": {
+    width: "100%",
+  },
 }));
 
 export const ImageContainer = styled(Box)(() => ({
@@ -32,5 +41,7 @@ export const ImageContainer = styled(Box)(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  "@media screen and (max-width: 768px)": {},
+  "@media screen and (max-width: 768px)": {
+    width: "100%",
+  },
 }));
