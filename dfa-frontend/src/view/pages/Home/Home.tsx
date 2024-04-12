@@ -10,6 +10,7 @@ import {
 } from "./Home.styled";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Home = () => {
   const [regex, setRegex] = useState("");
@@ -132,12 +133,18 @@ const Home = () => {
       <ImageContainer>
         {image && (
           <Box>
-            <Typography
-              sx={{ fontSize: "1rem", marginBottom: "5px", color: "white" }}
-            >
-              {type}
-            </Typography>
-            <img src={"data:image/png;base64," + image.image} />
+            {isLoading_nfa || isLoading_dfa || isLoading_min_dfa ? (
+              <CircularProgress />
+            ) : (
+              <>
+                <Typography
+                  sx={{ fontSize: "1.6rem", marginBottom: "5px", color: "white" }}
+                >
+                  {type}
+                </Typography>
+                <img src={"data:image/png;base64," + image.image} />
+              </>
+            )}
           </Box>
         )}
       </ImageContainer>
