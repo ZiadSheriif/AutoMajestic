@@ -1,11 +1,16 @@
 # imports
 from flask import Flask, send_file, request
 import fitz
+from flask_cors import CORS, cross_origin
 from src.regex_validator import RegexValidator
 from src.nfa import NFA
 from utils.helpers import create_directory
 
+# CORS configuration
+origin = "http://localhost:5173"
 app = Flask(__name__)
+CORS(app, resources={r"*": {"origins": "*"}}, supports_credentials=True)
+app.config["CORS_HEADERS"] = "Content-Type"
 
 
 create_directory("output/nfa")
@@ -39,8 +44,8 @@ def run_pipeline(regex):
     nfa.visualize(name="output/nfa/nfa.gv", view=False)
     return nfa
 
-
-@app.route("/compile", methods=["GET"])
+@cross_origin(origins="*")
+@app.route("/compile/nfa", methods=["GET"])
 def compile_regex():
 
     regex = request.args.get("regex")
