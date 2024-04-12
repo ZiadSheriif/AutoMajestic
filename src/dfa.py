@@ -1,51 +1,98 @@
 from collections import deque
+import graphviz
+
+
 class DFA:
     def __init__(self, nfa):
         self.nfa = nfa
-        self.construct_dfa()
-        
-    def _epsilon_closure(self, state):
-        closure = set()
-        stack = [state]
+        self.dfa_states = self.construct_dfa()
+
+    def _epsilon_closure(self, states):
+        closure = set(states)
+        stack = list(states)
         while stack:
             current_state = stack.pop()
-            closure.add(current_state)
             for symbol, next_state in current_state.transitions:
                 if symbol == "ε" and next_state not in closure:
                     stack.append(next_state)
-        closure = frozenset(closure)
-        closure.sort(key=lambda x: x.label)
-        
-        # insert ' ' in the closure set
-        closure = ' '.join([state.label for state in closure])
-        return closure
-        
+                    closure.add(next_state)
 
-    def construct_dfa(self,nfa):
-        dfa_states = []
+        closure = list(closure)
+        closure.sort(key=lambda x: x.label)
+
+        # insert ' ' in the closure set
+        closure = " ".join([state.label for state in closure])
+        print("closure: ", closure)
+        return closure
+
+    def _move(self, state, symbol):
+        next_states = set()
+
+        states = state.split()
+        states_list = []
+        for label in states:
+            state = self.nfa.get_state_by_label(label)
+            states_list.append(state)
+        for state in states_list:
+            for s, next_state in state.transitions:
+                if s == symbol:
+                    next_states.add(next_state)
+        return next_states
+
+    def construct_dfa(self):
         dfa_transitions = {}
-        nfa_states = nfa.get_states()
-        symbols = nfa.get_symbols()
-        
-        dfa_start = self.epsilon_closure(nfa.start)
+        symbols = self.nfa.get_symbols()
+        dfa_start = self._epsilon_closure([self.nfa.start])
+        self.dfa_states = {'startingState': dfa_start}
+
         queue = deque([dfa_start])
         visited = set([dfa_start])
+
         while queue:
             current_state = queue.popleft()
+            print("current_state: ", current_state)
             for symbol in symbols:
-                next_state = self.epsilon_closure(nfa.move(current_state, symbol))
-                if next_state ==' ' or next_state == '':
+                next_states = self._epsilon_closure(self._move(current_state, symbol))
+                print("next_states in DFA: ", next_states)
+                if next_states == " " or next_states == "":
                     continue
-                if next_state not in visited:
-                    queue.append(next_state)
-                    visited.add(next_state)
-                dfa_transitions[(current_state, symbol)] = next_state
-                
-        #TODO complete the implementation after Eid break :)
-    
-        
-        pass
+                if next_states not in visited:
+                    queue.append(next_states)
+                    visited.add(next_states)
+                self.dfa_states.setdefault(current_state, {})[symbol] = next_states
+            state_by_label = self.nfa.get_state_by_label(current_state)
+            self.dfa_states.setdefault(current_state, {})["isTerminatingState"] = self.nfa.check_acceptance(state_by_label)
+
+        # TODO complete the implementation after Eid break :)
+
+        return self.dfa_states
         # Convert the NFA to a DFA using the subset construction algorithm
+        
+    def to_graph(self):
+        return self.dfa_states
+        
+    def visualize(self, name="output/dfa/dfa.gv", view=True):
+        graph = graphviz.Digraph(name="DFA", engine="dot")
+        
+        for state, transitions in self.dfa_states.items():
+    
+            if state == "startingState":
+                # graph.node(state, shape="point")
+                continue
+            if transitions["isTerminatingState"]:
+                graph.node(state, shape="doublecircle")
+            else:
+                graph.node(state, shape="circle")
+                
+                
+            for symbol, next_state in transitions.items():
+                if symbol == "isTerminatingState":
+                    continue
+                children = next_state.split(",")
+                for child in children:
+                    graph.edge(state, child, label=symbol)
+        graph.render(name, view=view)
+        
 
     def minimize(self):
         pass

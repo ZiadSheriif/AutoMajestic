@@ -1,0 +1,9 @@
+digraph DFA {
+	S0 [shape=circle]
+	S0 -> "S1 S2" [label=a]
+	"S1 S2" [shape=circle]
+	"S1 S2" -> "S3 S4" [label=b]
+	"S3 S4" [shape=circle]
+	"S3 S4" -> S5 [label=b]
+	S5 [shape=doublecircle]
+}
