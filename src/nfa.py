@@ -88,9 +88,7 @@ class NFA:
                 i += 2
             elif char == ".":
                 state_2 = nfa_stack.pop()
-                state_1 = nfa_stack.pop()
-                print("state_1: ", state_1.start.label)
-                print("state_2: ", state_2.start.label)
+                state_1 = nfa_stack.pop()                
                 state_1.accept.add_transition("ε", state_2.start)
                 nfa_stack.append(NFA(state_1.start, state_2.accept))
                 
