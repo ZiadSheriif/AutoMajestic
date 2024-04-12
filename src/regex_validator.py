@@ -51,8 +51,8 @@ class RegexValidator:
         self.postfix = regex[:]
         print(self.postfix)
         hyphens_count = self.postfix.count("-")
-        print("hyphens_count: ", hyphens_count)
-        print("self.postfix: ", len(self.postfix))
+        # print("hyphens_count: ", hyphens_count)
+        # print("self.postfix: ", len(self.postfix))
         for i in range(hyphens_count):
             for j in range(len(self.postfix)):
                 operator = self.postfix[j]
@@ -72,7 +72,7 @@ class RegexValidator:
                         temp += char
                     self.postfix = self.postfix[0:j] + temp + self.postfix[j + 2 :]
                     break
-        print("regex after replacing hyphens with alternation: ", self.postfix)
+        # print("regex after replacing hyphens with alternation: ", self.postfix)
 
         # insert . operator between adjacent characters
         dots_container = []
@@ -85,8 +85,8 @@ class RegexValidator:
             elif self.postfix[i] in start_ops and self.postfix[i + 1] not in end_ops:
                 dots_container.append(i)
 
-        for i in dots_container:
-            self.postfix = self.postfix[: i + 1] + "." + self.postfix[i + 1 :]
+        for i in range(len(dots_container)):
+            self.postfix = self.postfix[: dots_container[i] + i+ 1] + "." + self.postfix[dots_container[i] +i + 1 :]
 
         ############################################################
         ############################################################
@@ -108,8 +108,8 @@ class RegexValidator:
                 stack.append(operator)
             else:
                 postfix += operator
-            print("stack: ", stack)
-            print("postfix: ", postfix)
+            # print("stack: ", stack)
+            # print("postfix: ", postfix)
         while stack:
             postfix += stack.pop()
 
