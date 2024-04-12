@@ -1,21 +1,19 @@
-# imports
-from flask import Flask, send_file, request, jsonify
+from flask import Flask, jsonify, request
 import fitz
 import base64
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
+
 from src.regex_validator import RegexValidator
 from src.nfa import NFA
+from src.dfa import DFA
 from utils.helpers import create_directory
 
-# CORS configuration
-origin = "http://localhost:5173"
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}}, supports_credentials=True)
-app.config["CORS_HEADERS"] = "Content-Type"
-
 
 create_directory("output/nfa")
 create_directory("output/dfa")
+create_directory("output/min-dfa")
 
 
 def pdf_to_png(pdf_path, png_path):
@@ -27,7 +25,7 @@ def pdf_to_png(pdf_path, png_path):
         pix.save(png_path, "png")
 
 
-def run_pipeline(regex):
+def run_pipeline(regex, step):
     print("##########  VALIDATION  #############")
     print("Regex:", regex)
 
@@ -42,30 +40,48 @@ def run_pipeline(regex):
 
     # Convert the regex to an NFA
     nfa = NFA(postfix=postfix_regex)
-    nfa.visualize(name="output/nfa/nfa.gv", view=False)
+    nfa.visualize(name=f"output/nfa/nfa.gv", view=False)
+
+    if step == "dfa" or step == "min-dfa":
+        dfa = DFA(nfa)
+        dfa.visualize(name=f"output/dfa/dfa.gv", view=False)
+        if step == "min-dfa":
+            dfa_min = dfa.minimize()
+            dfa_min.visualize(name="output/min-dfa/min-dfa.gv", view=False)
+            return dfa_min
+        return dfa
+
     return nfa
 
-@cross_origin(origins="*")
-@app.route("/compile/nfa", methods=["GET"])
-def compile_regex():
 
+def compile_regex_pipeline(step):
     regex = request.args.get("regex")
-
-    nfa = run_pipeline(regex)
-
-    if nfa is None:
+    automaton = run_pipeline(regex, step)
+    if automaton is None:
         return "Invalid regex", 400
 
-    pdf_to_png("output/nfa/nfa.gv.pdf", "output/nfa/nfa{}.png")
+    pdf_to_png(f"output/{step}/{step}.gv.pdf", f"output/{step}/{step}.png")
 
-    # return send_file("output/nfa/nfa.png", mimetype="image/png")
-
-    # ? in case of using base64 encoding
-    with open("output/nfa/nfa0.png", "rb") as f:
+    with open(f"output/{step}/{step}.png", "rb") as f:
         image_data = f.read()
         encoded_image = base64.b64encode(image_data).decode("utf-8")
 
     return jsonify({"image": encoded_image})
+
+
+@app.route("/compile/nfa", methods=["GET"])
+def compile_nfa():
+    return compile_regex_pipeline("nfa")
+
+
+@app.route("/compile/dfa", methods=["GET"])
+def compile_dfa():
+    return compile_regex_pipeline("dfa")
+
+
+@app.route("/compile/min-dfa", methods=["GET"])
+def compile_min_dfa():
+    return compile_regex_pipeline("min-dfa")
 
 
 if __name__ == "__main__":
