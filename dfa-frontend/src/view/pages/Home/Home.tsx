@@ -6,8 +6,9 @@ import {
   Container,
   ImageContainer,
   InputContainer,
+  Left,
 } from "./Home.styled";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 
 const Home = () => {
@@ -75,29 +76,67 @@ const Home = () => {
 
   return (
     <Container>
-      <InputContainer>
-        <TextField
-          value={regex}
-          setValue={setRegex}
-          label="Regex:"
-          placeHolder={""}
-        />
-        <ButtonsContainer>
-          <Button onClick={handleGetNfa} disabled={!regex}>
-            Get NFA
-          </Button>
-          <Button onClick={handleGetDfa} disabled={!regex}>
-            Get DFA
-          </Button>
-          <Button onClick={handleGetMinDfa} disabled={!regex}>
-            Get Min-DFA
-          </Button>
-        </ButtonsContainer>
-      </InputContainer>
+      <Left>
+        <Typography
+          sx={{ fontSize: "1rem", marginBottom: "5px", color: "white" }}
+        >
+          AutoMajestic
+        </Typography>
+        <InputContainer>
+          <TextField
+            value={regex}
+            setValue={setRegex}
+            label="Regex:"
+            placeHolder={""}
+          />
+          <ButtonsContainer>
+            <Button
+              onClick={handleGetNfa}
+              disabled={!regex}
+              sx={{
+                color: "#F2613F",
+                "&:disabled": {
+                  color: "gray",
+                },
+              }}
+            >
+              Get NFA
+            </Button>
+            <Button
+              onClick={handleGetDfa}
+              disabled={!regex}
+              sx={{
+                color: "#F2613F",
+                "&:disabled": {
+                  color: "gray",
+                },
+              }}
+            >
+              Get DFA
+            </Button>
+            <Button
+              onClick={handleGetMinDfa}
+              disabled={!regex}
+              sx={{
+                color: "#F2613F",
+                "&:disabled": {
+                  color: "gray",
+                },
+              }}
+            >
+              Get Min-DFA
+            </Button>
+          </ButtonsContainer>
+        </InputContainer>
+      </Left>
       <ImageContainer>
         {image && (
           <Box>
-            <Typography>{type}</Typography>
+            <Typography
+              sx={{ fontSize: "1rem", marginBottom: "5px", color: "white" }}
+            >
+              {type}
+            </Typography>
             <img src={"data:image/png;base64," + image.image} />
           </Box>
         )}

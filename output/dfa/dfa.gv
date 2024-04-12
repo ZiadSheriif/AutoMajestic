@@ -1,9 +1,9 @@
 digraph DFA {
-	S0 [shape=circle]
-	S0 -> "S1 S2" [label=a]
-	"S1 S2" [shape=circle]
-	"S1 S2" -> "S3 S4" [label=b]
-	"S3 S4" [shape=circle]
-	"S3 S4" -> S5 [label=b]
-	S5 [shape=doublecircle]
+	S14 [shape=circle]
+	S14 -> "S15 S16 S18 S20" [label=a]
+	"S15 S16 S18 S20" [shape=circle]
+	"S15 S16 S18 S20" -> "S19 S21" [label=b]
+	"S15 S16 S18 S20" -> "S17 S21" [label=a]
+	"S19 S21" [shape=circle]
+	"S17 S21" [shape=circle]
 }

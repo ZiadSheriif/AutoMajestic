@@ -1,11 +1,13 @@
 import { Box } from "@mui/system";
 import { Outlet } from "react-router";
 import { Toaster } from "react-hot-toast";
-
+import Header from "../layouts/Header/Header";
+import Footer from "../layouts/Footer/Footer";
 const BasePage = () => {
   return (
     <>
       {" "}
+      <Header />
       <Box
         sx={{
           position: "relative",
@@ -13,10 +15,11 @@ const BasePage = () => {
           width: "100vw",
         }}
       >
-        <Box sx={{ minHeight: "calc(100vh)", width: "100%" }}>
+        <Box sx={{ minHeight: "100%", width: "100%" }}>
           <Outlet />
         </Box>
       </Box>
+      <Footer />
       <Toaster
         position="top-center"
         gutter={12}
