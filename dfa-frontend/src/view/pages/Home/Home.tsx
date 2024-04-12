@@ -102,14 +102,14 @@ const Home = () => {
         <Typography
           sx={{ fontSize: "1rem", marginBottom: "5px", color: "white" }}
         >
-          AutoMajestic
+          Enter Your Regex
         </Typography>
         <InputContainer>
           <TextField
             value={regex}
             setValue={setRegex}
             label="Regex:"
-            placeHolder={""}
+            placeHolder={"Ex: aab+a*ba(a|b)"}
           />
           <ButtonsContainer>
             <Button
@@ -119,6 +119,12 @@ const Home = () => {
                 color: "#F2613F",
                 "&:disabled": {
                   color: "gray",
+                },
+                "&:hover": {
+                  color: "#ff9d86",
+                },
+                "&:focus": {
+                  outline: "none",
                 },
               }}
             >
@@ -132,6 +138,12 @@ const Home = () => {
                 "&:disabled": {
                   color: "gray",
                 },
+                "&:hover": {
+                  color: "#ff9d86",
+                },
+                "&:focus": {
+                  outline: "none",
+                },
               }}
             >
               Get DFA
@@ -143,6 +155,12 @@ const Home = () => {
                 color: "#F2613F",
                 "&:disabled": {
                   color: "gray",
+                },
+                "&:hover": {
+                  color: "#ff9d86",
+                },
+                "&:focus": {
+                  outline: "none",
                 },
               }}
             >
