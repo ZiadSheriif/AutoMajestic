@@ -72,15 +72,15 @@ class RegexValidator:
                         temp += char
                     self.postfix = self.postfix[0:j] + temp + self.postfix[j + 2 :]
                     break
-        # print("regex after replacing hyphens with alternation: ", self.postfix)
-
+        print("regex after replacing hyphens with alternation: ", self.postfix)
+        
         # insert . operator between adjacent characters
         dots_container = []
-        start_ops = [")", "*", "+","*"]
-        end_ops = ["*", "+",".", "|", ")"]
+        start_ops = ["*", ")", "+"]
+        end_ops = ["*", "+",".", ")", "|"]
 
         for i in range(len(self.postfix) - 1):
-            if self.postfix[i].isalnum() and self.postfix[i + 1].isalnum():
+            if self.postfix[i].isalnum() and (self.postfix[i + 1].isalnum() or self.postfix[i + 1] == "("):
                 dots_container.append(i)
             elif self.postfix[i] in start_ops and self.postfix[i + 1] not in end_ops:
                 dots_container.append(i)
@@ -90,6 +90,7 @@ class RegexValidator:
 
         ############################################################
         ############################################################
+        print("regex after inserting . operator: ", self.postfix)
 
         # apply the shunting yard algorithm to convert the infix regular expression to postfix
         stack = []

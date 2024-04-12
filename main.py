@@ -34,8 +34,8 @@ def run_pipeline(test_cases):
         
         print("##########  DFA  #############")
         # Convert the NFA to a DFA
-        dfa = DFA(nfa)
-        dfa.visualize(name=f"output/dfa/dfa_{idx}.gv", view=False)
+        # dfa = DFA(nfa)
+        # dfa.visualize(name=f"output/dfa/dfa_{idx}.gv", view=False)
 
         # Minimize the DFA
         # minimized_dfa = dfa.minimize()
@@ -44,10 +44,11 @@ def run_pipeline(test_cases):
 if __name__ == "__main__":
 
     test_cases = [
-        r"ab[ce-df]",
-        r"ab[ce-df",
-        r"ab*",
-        r"ab]",
+        # r"ab[ce-df]",
+        # r"ab[ce-df",
+        # r"ab*",
+        # r"ab]",
+        r"aab+a*ba(a|b)",
     ]
 
     run_pipeline(test_cases)
