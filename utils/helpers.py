@@ -8,6 +8,6 @@ def create_directory(directory):
 
 
 # dumping the nfa to a file json
-def dump_nfa(nfa, filename):
+def dump_json(nfa, filename):
     with open(filename, "w") as f:
         json.dump(nfa, f)

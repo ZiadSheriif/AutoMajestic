@@ -1,5 +1,5 @@
 from src.state import State
-from utils.helpers import dump_nfa
+from utils.helpers import dump_json
 import graphviz
 
 class NFA:
@@ -39,12 +39,20 @@ class NFA:
 
     def get_accepting_states(self):
         return [state for state in self.get_states() if state.is_accepting]
+        
 
-    def check_acceptance(self, state):
-        return state in self.get_accepting_states()
+    # check if one accpeting state is reachable from another accepting state
+    def is_accepting_state_reachable(self,states):
+        # print("States in is_accepting_state_reachable: ", states)
+        for state in states:
+            if state.is_accepting:
+                return True
+        return False
+        
+        
 
     def get_states_by_label(self, labels):
-        labels = labels.split(",")
+        labels = labels.split()
         states_by_label = []
         for label in labels:
             states_by_label.append(self.get_state_by_label(label))
@@ -136,7 +144,7 @@ class NFA:
             states[state.label] = state_graph
               
         # make a json object of the NFA graph
-        dump_nfa({"startingState": self.start.label, **states}, "output/nfa/nfa.json")
+        dump_json({"startingState": self.start.label, **states}, "output/nfa/nfa.json")
             
             
         return {
@@ -146,7 +154,7 @@ class NFA:
 
     def visualize(self, name="output/nfa/nfa.gv", view=False):
         nfa_graph = self.to_graph()
-        graph = graphviz.Digraph(engine="dot")
+        graph = graphviz.Digraph(name="NFA",engine="dot")
 
         for state, transitions in nfa_graph.items():
             if state == "startingState":

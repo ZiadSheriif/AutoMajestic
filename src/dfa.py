@@ -1,4 +1,5 @@
 from collections import deque
+from utils.helpers import dump_json
 import graphviz
 
 
@@ -22,7 +23,7 @@ class DFA:
 
         # insert ' ' in the closure set
         closure = " ".join([state.label for state in closure])
-        print("closure: ", closure)
+        # print("closure: ", closure)
         return closure
 
     def _move(self, state, symbol):
@@ -32,6 +33,7 @@ class DFA:
         states_list = []
         for label in states:
             state = self.nfa.get_state_by_label(label)
+            # print("State in Move!: ", state.label)
             states_list.append(state)
         for state in states_list:
             for s, next_state in state.transitions:
@@ -50,26 +52,25 @@ class DFA:
 
         while queue:
             current_state = queue.popleft()
-            print("current_state: ", current_state)
+            # print("current_state: ", current_state)
             for symbol in symbols:
                 next_states = self._epsilon_closure(self._move(current_state, symbol))
-                print("next_states in DFA: ", next_states)
+                # print("next_states in DFA: ", next_states)
                 if next_states == " " or next_states == "":
                     continue
                 if next_states not in visited:
                     queue.append(next_states)
                     visited.add(next_states)
                 self.dfa_states.setdefault(current_state, {})[symbol] = next_states
-            state_by_label = self.nfa.get_state_by_label(current_state)
-            self.dfa_states.setdefault(current_state, {})["isTerminatingState"] = self.nfa.check_acceptance(state_by_label)
+            states_by_label = self.nfa.get_states_by_label(current_state)
+            self.dfa_states.setdefault(current_state, {})["isTerminatingState"] = self.nfa.is_accepting_state_reachable(states_by_label)
 
         # TODO complete the implementation after Eid break :)
 
         return self.dfa_states
         # Convert the NFA to a DFA using the subset construction algorithm
         
-    def to_graph(self):
-        return self.dfa_states
+
         
     def visualize(self, name="output/dfa/dfa.gv", view=True):
         graph = graphviz.Digraph(name="DFA", engine="dot")
@@ -99,5 +100,5 @@ class DFA:
         # Minimize the DFA
 
     def to_graph(self):
-        pass
-        # Generate a graph of the DFA
+        dump_json({**self.dfa_states}, "output/dfa/dfa.json")
+        return self.dfa_states
