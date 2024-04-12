@@ -10,6 +10,15 @@ export const Container = styled(Box)(() => ({
   "@media screen and (max-width: 768px)": {},
 }));
 
+export const ButtonsContainer = styled(Box)(() => ({
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: "10px",
+  "@media screen and (max-width: 768px)": {},
+}));
+
 export const InputContainer = styled(Box)(() => ({
   width: "30%",
   height: "100%",
