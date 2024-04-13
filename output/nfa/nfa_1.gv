@@ -1,4 +1,6 @@
 digraph NFA {
+	"" [shape=none]
+	"" -> S1
 	S1 [shape=circle]
 	S1 -> S2 [label=a]
 	S2 [shape=circle]
