@@ -21,7 +21,6 @@ class DFA:
         closure = list(closure)
         closure.sort(key=lambda x: x.label)
 
-        # insert ' ' in the closure set
         closure = " ".join([state.label for state in closure])
         # print("closure: ", closure)
         return closure
@@ -40,7 +39,7 @@ class DFA:
                 if s == symbol:
                     next_states.add(next_state)
         return next_states
-
+    
     def construct_dfa(self):
         dfa_transitions = {}
         symbols = self.nfa.get_symbols()
@@ -54,7 +53,8 @@ class DFA:
             current_state = queue.popleft()
             # print("current_state: ", current_state)
             for symbol in symbols:
-                next_states = self._epsilon_closure(self._move(current_state, symbol))
+                next_moves = self._move(current_state, symbol)
+                next_states = self._epsilon_closure(next_moves)
                 # print("next_states in DFA: ", next_states)
                 if next_states == " " or next_states == "":
                     continue
@@ -68,7 +68,6 @@ class DFA:
         # TODO complete the implementation after Eid break :)
 
         return self.dfa_states
-        # Convert the NFA to a DFA using the subset construction algorithm
         
 
         
@@ -99,9 +98,6 @@ class DFA:
         graph.render(name, view=view)
         
 
-    def minimize(self):
-        pass
-        # Minimize the DFA
 
     def to_graph(self):
         dump_json({**self.dfa_states}, "output/dfa/dfa.json")

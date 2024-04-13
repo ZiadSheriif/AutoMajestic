@@ -36,7 +36,7 @@ export const InputContainer = styled(Box)(() => ({
 }));
 
 export const Left = styled(Box)(() => ({
-  width: "95%",
+  width: "60%",
   height: "100%",
   marginTop: "50px",
   color: "white",
@@ -49,7 +49,7 @@ export const ImageContainer = styled(Box)(() => ({
   marginTop: "70px",
   backgroundColor: "#6965654a",
   display: "flex",
-  justifyContent: "start",
+  justifyContent: "space-evenly",
   alignItems: "center",
   overflowX: "scroll",
   borderRadius: "10px",

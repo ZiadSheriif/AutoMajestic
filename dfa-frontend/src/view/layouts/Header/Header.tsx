@@ -7,7 +7,7 @@ const Header = () => {
         height: "50px",
         width: "100%",
         backgroundColor: "#9B3922",
-        padding: "0 20px",
+        padding: "0 50px",
       }}
     >
       <Typography sx={{ color: "white", fontSize: "2rem" }}>

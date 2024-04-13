@@ -2,7 +2,7 @@ class MIN_DFA:
     def __init__(self, dfa):
         self.dfa = dfa
         self.min_dfa = None
-        self.min_dfa_states = None
+        self.min_dfa_states = self.minimize()
 
     def minimize(self):
         #! Step 1: Split the states into two groups
