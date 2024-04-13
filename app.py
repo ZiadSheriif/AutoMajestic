@@ -60,9 +60,9 @@ def compile_regex_pipeline(step):
     if automaton is None:
         return "Invalid regex", 400
 
-    pdf_to_png(f"output/{step}/{step}.gv.pdf", f"output/{step}/{step}.png")
+    # pdf_to_png(f"output/{step}/{step}.gv.pdf", f"output/{step}/{step}.png")
 
-    with open(f"output/{step}/{step}.png", "rb") as f:
+    with open(f"output/{step}/{step}.gv.png", "rb") as f:
         image_data = f.read()
         encoded_image = base64.b64encode(image_data).decode("utf-8")
 
