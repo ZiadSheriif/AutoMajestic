@@ -12,6 +12,7 @@ def run_pipeline(test_cases):
     # Create the output directories if they don't exist
     create_directory("output/nfa")
     create_directory("output/dfa")
+    create_directory("output/min-dfa")
 
     for idx, test_case in enumerate(test_cases, start=1):
         print(f"##########  TEST CASE {idx}  #############")
@@ -47,10 +48,10 @@ if __name__ == "__main__":
     test_cases = [
         # r"ab[ce-df]",
         # r"ab[ce-df",
-        # r"ab*",
+        r"ab*",
         # r"ab]",
         # r"aab+a*ba(a|b)",
-        r"aab+a*ba(a|b)",
+        # r"aab+a*ba(a|b)",
     ]
 
     run_pipeline(test_cases)

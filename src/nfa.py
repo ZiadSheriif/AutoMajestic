@@ -67,67 +67,88 @@ class NFA:
                     symbols.add(symbol)
         print("Symbols: ", list(symbols))
         return list(symbols)
+        
+        
+        
+    def handle_closure(char, nfa_stack, i):
+        state_1 = nfa_stack.pop()
+        start = State("S" + str(i))
+        accept = State("S" + str(i + 1))
+        start.add_transition("ε", state_1.start)
+        start.add_transition("ε", accept)
+        state_1.accept.add_transition("ε", start)
+        state_1.accept.add_transition("ε", accept)
+        nfa_stack.append(NFA(start, accept))
+        return i + 2 
+        
+    def handle_alternation(char, nfa_stack, i):
+        state_2 = nfa_stack.pop()
+        state_1 = nfa_stack.pop()
+        start = State("S" + str(i))
+        accept = State("S" + str(i + 1))
+        start.add_transition("ε", state_1.start)
+        start.add_transition("ε", state_2.start)
+        state_1.accept.add_transition("ε", accept)
+        state_2.accept.add_transition("ε", accept)
+        nfa_stack.append(NFA(start, accept))
+        return i + 2
+        
+        
+    def handle_concatenation(char, nfa_stack, i):
+        state_2 = nfa_stack.pop()
+        state_1 = nfa_stack.pop()                
+        state_1.accept.add_transition("ε", state_2.start)
+        nfa_stack.append(NFA(state_1.start, state_2.accept))
+        return i 
+        
+    def handle_positive_closure(char, nfa_stack, i):
+        state_1 = nfa_stack.pop()
+        start = State("S" + str(i))
+        accept = State("S" + str(i + 1))
+        start.add_transition("ε", state_1.start)
+        state_1.accept.add_transition("ε", start)
+        state_1.accept.add_transition("ε", accept)
+        nfa_stack.append(NFA(start, accept))
+        return i + 2
+        
+    def handle_optional(char, nfa_stack, i):
+        state_1 = nfa_stack.pop()
+        start = State("S" + str(i))
+        accept = State("S" + str(i + 1))
+        start.add_transition("ε", state_1.start)
+        start.add_transition("ε", accept)
+        state_1.accept.add_transition("ε", accept)
+        nfa_stack.append(NFA(start, accept))
+        return i + 2
+        
+    def handle_alpha_numeric(char, nfa_stack, i):
+        start = State("S" + str(i))
+        accept = State("S" + str(i + 1))
+        start.add_transition(char, accept)
+        nfa_stack.append(NFA(start, accept))
+        return i + 2
 
     def construct_nfa(self, postfix):
         nfa_stack = []
-        i = 0
+        i = 1
         for char in postfix:
             if char == "*":
-                state_1 = nfa_stack.pop()
-                start = State("S" + str(i))
-                accept = State("S" + str(i + 1))
-                start.add_transition("ε", state_1.start)
-                start.add_transition("ε", accept)
-                state_1.accept.add_transition("ε", start)
-                state_1.accept.add_transition("ε", accept)
-                nfa_stack.append(NFA(start, accept))
-                i += 2
+                i = NFA.handle_closure(char, nfa_stack, i)
 
             elif char == "|":
-                state_2 = nfa_stack.pop()
-                state_1 = nfa_stack.pop()
-                start = State("S" + str(i))
-                accept = State("S" + str(i + 1))
-                start.add_transition("ε", state_1.start)
-                start.add_transition("ε", state_2.start)
-                state_1.accept.add_transition("ε", accept)
-                state_2.accept.add_transition("ε", accept)
-                nfa_stack.append(NFA(start, accept))
-                i += 2
+                i = NFA.handle_alternation(char, nfa_stack, i)
             elif char == ".":
-                state_2 = nfa_stack.pop()
-                state_1 = nfa_stack.pop()                
-                state_1.accept.add_transition("ε", state_2.start)
-                nfa_stack.append(NFA(state_1.start, state_2.accept))
+                i = NFA.handle_concatenation(char, nfa_stack, i)
                 
             elif char == "+":
-                state_1 = nfa_stack.pop()
-                start = State("S" + str(i))
-                accept = State("S" + str(i + 1))
-                start.add_transition("ε", state_1.start)
-                state_1.accept.add_transition("ε", start)
-                state_1.accept.add_transition("ε", accept)
-                nfa_stack.append(NFA(start, accept))
-                i += 2
+                i = NFA.handle_positive_closure(char, nfa_stack, i)
             
             elif char == "?":
-                state_1 = nfa_stack.pop()
-                start = State("S" + str(i))
-                accept = State("S" + str(i + 1))
-                start.add_transition("ε", state_1.start)
-                start.add_transition("ε", accept)
-                state_1.accept.add_transition("ε", accept)
-                nfa_stack.append(NFA(start, accept))
-                i += 2
+                i = NFA.handle_optional(char, nfa_stack, i)
             else:
-                start = State("S" + str(i))
-                accept = State("S" + str(i + 1))
-                start.add_transition(char, accept)
-                nfa_stack.append(NFA(start, accept))
-                i += 2
+                i = NFA.handle_alpha_numeric(char, nfa_stack, i)
 
         return nfa_stack.pop()
-        # Convert the regex to an NFA using Thompson's construction algorithm
 
     def to_graph(self):
 
@@ -158,6 +179,8 @@ class NFA:
 
         for state, transitions in nfa_graph.items():
             if state == "startingState":
+                graph.node("", shape="none")
+                graph.edge("", transitions)
                 continue
             if transitions["isTerminatingState"]:
                 graph.node(state, shape="doublecircle")
@@ -172,6 +195,8 @@ class NFA:
                 for child in children:
                     graph.edge(state, child, label=symbol)
 
+        graph.format = "png"
+        graph.attr(rankdir="LR")
         graph.render(name, view=view)
 
         return graph
