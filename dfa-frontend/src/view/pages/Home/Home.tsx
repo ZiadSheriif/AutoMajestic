@@ -181,6 +181,7 @@ const Home = () => {
                     fontSize: "1.6rem",
                     marginBottom: "5px",
                     color: "white",
+                    marginLeft: "10px",
                   }}
                 >
                   {type}

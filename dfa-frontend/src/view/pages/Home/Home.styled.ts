@@ -36,24 +36,31 @@ export const InputContainer = styled(Box)(() => ({
 }));
 
 export const Left = styled(Box)(() => ({
-
   width: "95%",
   height: "100%",
   marginTop: "50px",
   color: "white",
-  "@media screen and (max-width: 768px)": {
-  },
+  "@media screen and (max-width: 768px)": {},
 }));
 
 export const ImageContainer = styled(Box)(() => ({
   width: "95%",
-  minHeight: "100px",
+  minHeight: "200px",
+  marginTop: "70px",
   backgroundColor: "#6965654a",
   display: "flex",
-  justifyContent: "center",
+  justifyContent: "start",
   alignItems: "center",
-  // margin: "10px 0",
+  overflowX: "scroll",
   borderRadius: "10px",
-  "@media screen and (max-width: 768px)": {
+  "&::-webkit-scrollbar": {
+    width: "5px",
+    backgroundColor: "#dddddd", // Change scrollbar color to gray
+    borderRadius: "10px", // Round the scrollbar border
   },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: "gray", // Change thumb color to darker gray
+    borderRadius: "10px", // Round the thumb border
+  },
+  "@media screen and (max-width: 768px)": {},
 }));
