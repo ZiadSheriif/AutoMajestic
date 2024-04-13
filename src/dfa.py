@@ -93,7 +93,9 @@ class DFA:
                 children = next_state.split(",")
                 for child in children:
                     graph.edge(state, child, label=symbol)
-        # graph.format = "png"
+                    
+        graph.format = "png"
+        graph.attr(rankdir="LR")
         graph.render(name, view=view)
         
 

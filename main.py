@@ -48,10 +48,10 @@ if __name__ == "__main__":
     test_cases = [
         # r"ab[ce-df]",
         # r"ab[ce-df",
-        # r"ab*",
+        r"ab*",
         # r"ab]",
         # r"aab+a*ba(a|b)",
-        r"aab+a*ba(a|b)",
+        # r"aab+a*ba(a|b)",
     ]
 
     run_pipeline(test_cases)

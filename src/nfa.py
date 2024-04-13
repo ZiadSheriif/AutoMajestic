@@ -130,7 +130,7 @@ class NFA:
 
     def construct_nfa(self, postfix):
         nfa_stack = []
-        i = 0
+        i = 1
         for char in postfix:
             if char == "*":
                 i = NFA.handle_closure(char, nfa_stack, i)
@@ -195,7 +195,8 @@ class NFA:
                 for child in children:
                     graph.edge(state, child, label=symbol)
 
-        # graph.format = "png"
+        graph.format = "png"
+        graph.attr(rankdir="LR")
         graph.render(name, view=view)
 
         return graph
