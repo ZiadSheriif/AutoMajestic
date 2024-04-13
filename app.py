@@ -6,6 +6,7 @@ from flask_cors import CORS
 from src.regex_validator import RegexValidator
 from src.nfa import NFA
 from src.dfa import DFA
+from src.min_dfa import MIN_DFA
 from utils.helpers import create_directory
 
 app = Flask(__name__)
@@ -46,7 +47,7 @@ def run_pipeline(regex, step):
         dfa = DFA(nfa)
         dfa.visualize(name=f"output/dfa/dfa.gv", view=False)
         if step == "min-dfa":
-            dfa_min = dfa.minimize()
+            dfa_min = MIN_DFA(dfa)
             dfa_min.visualize(name="output/min-dfa/min-dfa.gv", view=False)
             return dfa_min
         return dfa

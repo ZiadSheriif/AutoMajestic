@@ -4,8 +4,7 @@ digraph DFA {
 	S1 [shape=circle]
 	S1 -> "S2 S3 S5 S6" [label=a]
 	"S2 S3 S5 S6" [shape=doublecircle]
-	"S2 S3 S5 S6" -> "S3 S4 S5 S6" [label=b]
-	"S3 S4 S5 S6" [shape=doublecircle]
-	"S3 S4 S5 S6" -> "S3 S4 S5 S6" [label=b]
+	"S2 S3 S5 S6" -> "S4 S6" [label=b]
+	"S4 S6" [shape=doublecircle]
 	rankdir=LR
 }
