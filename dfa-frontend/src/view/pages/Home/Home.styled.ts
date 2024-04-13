@@ -51,8 +51,11 @@ export const ImageContainer = styled(Box)(() => ({
   display: "flex",
   justifyContent: "space-evenly",
   alignItems: "center",
-  overflowX: "scroll",
+  overflowX: "auto",
   borderRadius: "10px",
+  "& img": {
+    padding: "0 20px",
+  },
   "&::-webkit-scrollbar": {
     width: "5px",
     backgroundColor: "#dddddd", // Change scrollbar color to gray
