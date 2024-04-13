@@ -46,7 +46,7 @@ export const Left = styled(Box)(() => ({
   marginTop: "50px",
   color: "white",
   "@media screen and (max-width: 768px)": {
-    width: "100%",
+    width: "95%",
   },
 }));
 
@@ -60,6 +60,6 @@ export const ImageContainer = styled(Box)(() => ({
   // margin: "10px 0",
   borderRadius: "10px",
   "@media screen and (max-width: 768px)": {
-    width: "100%",
+    width: "95%",
   },
 }));
