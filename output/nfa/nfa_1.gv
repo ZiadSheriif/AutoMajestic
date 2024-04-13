@@ -8,6 +8,7 @@ digraph NFA {
 	S3 [shape=circle]
 	S3 -> S4 [label=b]
 	S4 [shape=circle]
+	S4 -> S5 [label="ε"]
 	S4 -> S6 [label="ε"]
 	S5 [shape=circle]
 	S5 -> S3 [label="ε"]

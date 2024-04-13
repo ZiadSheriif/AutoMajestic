@@ -1,0 +1,7 @@
+digraph MIN_DFA {
+	0 [shape=doublecircle]
+	0 -> 0 [label=b]
+	1 [shape=circle]
+	1 -> 0 [label=a]
+	rankdir=LR
+}

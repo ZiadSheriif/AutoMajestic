@@ -65,7 +65,7 @@ class NFA:
             for symbol, _ in state.transitions:
                 if symbol != "ε":
                     symbols.add(symbol)
-        print("Symbols: ", list(symbols))
+        # print("Symbols: ", list(symbols))
         return list(symbols)
         
         
