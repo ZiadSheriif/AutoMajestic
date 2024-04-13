@@ -8,4 +8,5 @@ digraph NFA {
 	S3 [shape=circle]
 	S3 -> S4 [label=b]
 	S4 [shape=doublecircle]
+	rankdir=LR
 }
