@@ -179,6 +179,8 @@ class NFA:
 
         for state, transitions in nfa_graph.items():
             if state == "startingState":
+                graph.node("", shape="none")
+                graph.edge("", transitions)
                 continue
             if transitions["isTerminatingState"]:
                 graph.node(state, shape="doublecircle")
@@ -193,6 +195,7 @@ class NFA:
                 for child in children:
                     graph.edge(state, child, label=symbol)
 
+        # graph.format = "png"
         graph.render(name, view=view)
 
         return graph

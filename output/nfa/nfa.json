@@ -1,1 +1,90 @@
-{"startingState": "S0", "S0": {"isTerminatingState": false, "a": "S1"}, "S1": {"isTerminatingState": false, "\u03b5": "S4"}, "S2": {"isTerminatingState": false, "a": "S3"}, "S3": {"isTerminatingState": false, "\u03b5": "S4,S5"}, "S4": {"isTerminatingState": false, "\u03b5": "S2,S5"}, "S5": {"isTerminatingState": true}}
+{
+      "startingState": "S0",
+      "S0": {
+            "isTerminatingState": false,
+            "a": "S1"
+      },
+      "S1": {
+            "isTerminatingState": false,
+            "ε": "S2"
+      },
+      "S10": {
+            "isTerminatingState": false,
+            "ε": "S8,S11"
+      },
+      "S11": {
+            "isTerminatingState": false,
+            "ε": "S12"
+      },
+      "S12": {
+            "isTerminatingState": false,
+            "b": "S13"
+      },
+      "S13": {
+            "isTerminatingState": false,
+            "ε": "S14"
+      },
+      "S14": {
+            "isTerminatingState": false,
+            "a": "S15"
+      },
+      "S15": {
+            "isTerminatingState": false,
+            "ε": "S20"
+      },
+      "S16": {
+            "isTerminatingState": false,
+            "a": "S17"
+      },
+      "S17": {
+            "isTerminatingState": false,
+            "ε": "S21"
+      },
+      "S18": {
+            "isTerminatingState": false,
+            "b": "S19"
+      },
+      "S19": {
+            "isTerminatingState": false,
+            "ε": "S21"
+      },
+      "S2": {
+            "isTerminatingState": false,
+            "a": "S3"
+      },
+      "S20": {
+            "isTerminatingState": false,
+            "ε": "S16,S18"
+      },
+      "S21": {
+            "isTerminatingState": true
+      },
+      "S3": {
+            "isTerminatingState": false,
+            "ε": "S6"
+      },
+      "S4": {
+            "isTerminatingState": false,
+            "b": "S5"
+      },
+      "S5": {
+            "isTerminatingState": false,
+            "ε": "S6,S7"
+      },
+      "S6": {
+            "isTerminatingState": false,
+            "ε": "S4"
+      },
+      "S7": {
+            "isTerminatingState": false,
+            "ε": "S10"
+      },
+      "S8": {
+            "isTerminatingState": false,
+            "a": "S9"
+      },
+      "S9": {
+            "isTerminatingState": false,
+            "ε": "S10,S11"
+      }
+}

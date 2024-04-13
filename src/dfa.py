@@ -78,7 +78,8 @@ class DFA:
         for state, transitions in self.dfa_states.items():
     
             if state == "startingState":
-                # graph.node(state, shape="point")
+                graph.node("", shape="none")
+                graph.edge("", transitions)
                 continue
             if transitions["isTerminatingState"]:
                 graph.node(state, shape="doublecircle")
@@ -92,6 +93,7 @@ class DFA:
                 children = next_state.split(",")
                 for child in children:
                     graph.edge(state, child, label=symbol)
+        # graph.format = "png"
         graph.render(name, view=view)
         
 
