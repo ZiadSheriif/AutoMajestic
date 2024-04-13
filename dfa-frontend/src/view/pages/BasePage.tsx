@@ -11,11 +11,12 @@ const BasePage = () => {
       <Box
         sx={{
           position: "relative",
-          minHeight: "100vh",
+          minHeight: "calc(100vh - 100px)",
           width: "100vw",
+          backgroundColor:"#0C0C0C"
         }}
       >
-        <Box sx={{ minHeight: "100%", width: "100%" }}>
+        <Box sx={{  width: "100%" }}>
           <Outlet />
         </Box>
       </Box>

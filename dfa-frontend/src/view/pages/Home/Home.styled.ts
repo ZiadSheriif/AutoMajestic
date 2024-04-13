@@ -1,25 +1,20 @@
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 
-
 export const Container = styled(Box)(() => ({
   width: "100%",
   height: "100%",
   display: "flex",
-  justifyContent: "space-around",
-  alignItems: "start",
   gap: "10px",
   backgroundColor: "#0C0C0C",
-  backgroundRepeat: "no-repeat", 
-  backgroundSize: "cover", 
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
   padding: "20px 0",
-  "@media screen and (max-width: 768px)": {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  "@media screen and (max-width: 768px)": {},
 }));
-
 
 export const ButtonsContainer = styled(Box)(() => ({
   width: "100%",
@@ -41,18 +36,18 @@ export const InputContainer = styled(Box)(() => ({
 }));
 
 export const Left = styled(Box)(() => ({
-  width: "30%",
+
+  width: "95%",
   height: "100%",
   marginTop: "50px",
   color: "white",
   "@media screen and (max-width: 768px)": {
-    width: "95%",
   },
 }));
 
 export const ImageContainer = styled(Box)(() => ({
-  width: "50%",
-  minHeight: "100vh",
+  width: "95%",
+  minHeight: "100px",
   backgroundColor: "#6965654a",
   display: "flex",
   justifyContent: "center",
@@ -60,6 +55,5 @@ export const ImageContainer = styled(Box)(() => ({
   // margin: "10px 0",
   borderRadius: "10px",
   "@media screen and (max-width: 768px)": {
-    width: "95%",
   },
 }));
