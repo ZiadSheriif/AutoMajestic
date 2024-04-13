@@ -38,9 +38,9 @@ class MIN_DFA:
         all_groups.append(group1)
         all_groups.append(group2)
 
-        print("Group1: ", group1)
-        print("Group2: ", group2)
-        print("All Groups: ", all_groups)
+        # print("Group1: ", group1)
+        # print("Group2: ", group2)
+        # print("All Groups: ", all_groups)
         #! [[{'S2 S3 S5 S6': {'b': 'S4 S6', 'isTerminatingState': True}}, {'S4 S6': {'isTerminatingState': True}}], [{'S1': {'a': 'S2 S3 S5 S6', 'isTerminatingState': False}}]]
 
         #! #############    Step 2: Split the groups until no further splits are possible  #############
@@ -86,7 +86,7 @@ class MIN_DFA:
         return self.min_dfa_states
 
     def create_minimized_states(self, groups):
-        print("Groups in MIN_DFA: ", groups)
+        # print("Groups in MIN_DFA: ", groups)
         #![[{'S2 S3 S5 S6': {'b': 'S4 S6', 'isTerminatingState': True}}], [{'S4 S6': {'isTerminatingState': True}}], [{'S1': {'a': 'S2 S3 S5 S6', 'isTerminatingState': False}}]]
         condensed_states = {}
         # print("Groups in MIN_DFA: ", groups)
@@ -111,7 +111,7 @@ class MIN_DFA:
                             value[symbol] = str(condensed_states[next_state])
                             new_groups[str(idx)] = value
         
-        print("New Groups in DFA: ", new_groups)
+        # print("New Groups in DFA: ", new_groups)
         #! New Groups in DFA: {'startingState': 1, '1': {'b': '2', 'isTerminatingState': True}, '3': {'a': '1', 'isTerminatingState': False}}            
         return new_groups
 
@@ -120,8 +120,8 @@ class MIN_DFA:
 
     def visualize(self, name="output/min-dfa/min-dfa.gv", view=True):
         graph = graphviz.Digraph(name="MIN_DFA", engine="dot")
-        print("Minimized DFA States: ", self.min_dfa_states)
-        #! Minimized DFA States:  {'startingState': 1, '1': {'b': '2', 'isTerminatingStx`ate': True}, '3': {'a': '1', 'isTerminatingState': False}}
+        # print("Minimized DFA States: ", self.min_dfa_states)
+        #! Minimized DFA States:  {'startingState': 1, '1': {'b': '2', 'isTerminatingState': True}, '3': {'a': '1', 'isTerminatingState': False}, '2': {'b': '2', 'isTerminatingState': True}}
         for state, transitions in self.min_dfa_states.items():
             if state == "startingState":
                 # graph.node("", shape="none")
