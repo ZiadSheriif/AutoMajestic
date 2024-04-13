@@ -5,6 +5,7 @@
 from src.regex_validator import RegexValidator
 from src.nfa import NFA
 from src.dfa import DFA
+from src.min_dfa import MIN_DFA
 from utils.helpers import create_directory
 
 
@@ -40,7 +41,8 @@ def run_pipeline(test_cases):
         dfa.visualize(name=f"output/dfa/dfa_{idx}.gv", view=False)
 
         # Minimize the DFA
-        # minimized_dfa = dfa.minimize()
+        minimized_dfa = MIN_DFA(dfa)
+        minimized_dfa.visualize(name=f"output/min-dfa/min-dfa_{idx}.gv", view=False)
 
 
 if __name__ == "__main__":
