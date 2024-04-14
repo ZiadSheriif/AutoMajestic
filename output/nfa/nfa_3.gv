@@ -36,4 +36,5 @@ digraph NFA {
 	S14 -> S16 [label="ε"]
 	startingState -> S1
 	rankdir=LR
+	fontname=bold label="NFA's pattern: abb+a?(a|b)"
 }

@@ -2,12 +2,12 @@ from src.regex_processor import RegexProcessor
 
 if __name__ == "__main__":
     test_cases = [
-        # r"ab[ce-df]",
+        r"ab[ce-df]",
         # r"ab[ce-df",
-        # r"ab?",
+        r"ab?",
         # r"ab]",
         r"abb+a?(a|b)",
-        # r"aab+a*ba(a|b)",
+        r"aab+a*ba(a|b)",
     ]
 
     for idx, test_case in enumerate(test_cases, start=1):

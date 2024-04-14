@@ -1,8 +1,8 @@
 from src.regex_validator import RegexValidator
-from src.nfa import NFA, construct_nfa,visualize
+from src.nfa import NFA, construct_nfa
 from src.dfa import DFA
 from src.min_dfa import MIN_DFA
-from utils.helpers import create_directory
+from utils.helpers import create_directory,visualize
 
 
 class RegexProcessor:
@@ -16,6 +16,10 @@ class RegexProcessor:
 
         print(f"\033[1;33m{'#' * 30}\n#     Regex Processor     #\n{'#' * 30}\033[0m\n")
         print(f"Regex: {self.regex}\n")
+        
+        
+        NFA.reset_state_number()
+
 
         # Validate the regex
         regex_validator = RegexValidator(self.regex)
@@ -33,9 +37,9 @@ class RegexProcessor:
         
 
         # Convert the regex to an NFA
-        nfa = construct_nfa(postfix_regex)
-        print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
-        visualize(name=f"output/nfa/nfa_{idx}.gv", view=False)
+        nfa_graph = construct_nfa(postfix_regex)
+        print(f"\033[1;36mNFA: {nfa_graph}\n\033[0m")
+        visualize(nfa_graph,name=f"output/nfa/nfa_{idx}.gv", view=False, pattern=self.regex)
 
         # # Convert the NFA to a DFA
         # dfa = DFA(nfa)
