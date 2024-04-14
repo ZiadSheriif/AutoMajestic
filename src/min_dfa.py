@@ -48,56 +48,73 @@ class MIN_DFA:
         #! for each group split the group into subgroups based on the transitions of each state ,
         #! if there is a transition to a state in another group then split the group
         symbol_groups = {}
-        for i in range(len(all_groups)):
+        i = -1
+        length = len(all_groups)
+        while i < length:
+            i += 1
+            if i < 0:
+                i = 0
+            if i >= len(all_groups):
+                break    
             print("\n")
             print("\n")
+            print("i ==> ",i)
+            print("length ==> ",length)
             current_group = all_groups[i]
             print("Current Group: ",current_group)
             
-            symbol_groups = {}
-            for j in range(len(current_group)):
-                current_state = current_group[j]
-                for key, value in current_state.items():
-                    for symbol in symbols:
-                        if symbol in value:
-                            for k in range(len(all_groups)):
-                                for state in all_groups[k]:
-                                    if (value[symbol] in state):
-                                        print(value[symbol], " is in group ",k)
-                                        if symbol not in symbol_groups:
-                                            symbol_groups[symbol] = {}
-                                        if k not in symbol_groups[symbol]:
-                                            symbol_groups[symbol][k] = [current_state]
-                                        else:
-                                            symbol_groups[symbol][k].append(current_state)
-
-                        else:
-                            print("State: ",current_state," don't have symbol ",symbol)
-                            k = "none"
-                            if symbol not in symbol_groups:
-                                            symbol_groups[symbol] = {}
-                            if k not in symbol_groups[symbol]:
-                                symbol_groups[symbol][k] = [current_state]
-                            else:
-                                symbol_groups[symbol][k].append(current_state)
-            
-            for key, value in symbol_groups.items():
-                print("Key: ", key, " value: ", value)
-                # Check if the symbol is present in multiple groups
-                if len(value) > 1:
-                    all_groups[i] = []
-                    new_groups = []
-                    # Extract states associated with each group
-                    for group_index, states in value.items():
-                        print("group_index",group_index)
-                        print("states: ",states)
-                        all_groups.append(states)
-                        # Remove original group from all_groups
-                    # Insert the extracted states into all_groups and reset i to 0
-                    
-                    i = 0
+            isSplitted = False
+            if len(current_group) < 2:
+                continue
+            for symbol in symbols:
+                if isSplitted:
                     break
-            print("All groups: ", all_groups)        
+                symbol_groups = {}
+                for j in range(len(current_group)):
+                    current_state = current_group[j]
+                    for key, value in current_state.items():
+                            if symbol in value:
+                                for k in range(len(all_groups)):
+                                    for state in all_groups[k]:
+                                        if (value[symbol] in state):
+                                            print(symbol,current_state, " is looking in group ",k)
+                                            if symbol not in symbol_groups:
+                                                symbol_groups[symbol] = {}
+                                            if k not in symbol_groups[symbol]:
+                                                symbol_groups[symbol][k] = [current_state]
+                                            else:
+                                                symbol_groups[symbol][k].append(current_state)
+                                            print(symbol_groups)
+
+                            else:
+                                print(symbol,current_state," don't have")
+                                k = "none"
+                                if symbol not in symbol_groups:
+                                    symbol_groups[symbol] = {}
+                                if k not in symbol_groups[symbol]:
+                                    symbol_groups[symbol][k] = [current_state]
+                                else:
+                                    symbol_groups[symbol][k].append(current_state)
+                                print(symbol_groups)    
+                
+                for key, value in symbol_groups.items():
+                    print("Key: ", key, " value: ", value)
+                    # Check if the symbol is present in multiple groups
+                    if len(value) > 1:
+                        all_groups[i] = []
+                        isSplitted = True
+                        # Extract states associated with each group
+                        for group_index, states in value.items():
+                            print("group_index",group_index)
+                            print("states: ",states)
+                            all_groups.append(states)
+                            # Remove original group from all_groups
+                        # Insert the extracted states into all_groups and reset i to 0
+                        
+                        i = -1
+                        break
+                print("All groups: ", all_groups) 
+                length = len(all_groups)       
         # Remove empty groups from all_groups            
         all_groups = [group for group in all_groups if group]     
 
