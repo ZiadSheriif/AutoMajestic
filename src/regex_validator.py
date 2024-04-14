@@ -8,114 +8,100 @@ class RegexValidator:
 
     def validate(self):
         try:
-            if self.regex.count('[') != self.regex.count(']'):
+            if self.regex.count("[") != self.regex.count("]"):
                 print("Invalid regular expression: unmatched brackets")
                 return False
             re.compile(self.regex)
         except re.error:
-            print("Invalid regex:" , self.regex)
+            print("Invalid regex:", self.regex)
             return False
         return True
 
-    def post_validate(self):
+    # replace hyphen with operator "|" to separate the range of characters in the character class
+    # as example: [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
+    # as example: [a-z] will be converted to (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z) and so on.
+    def replace_range(self, match):
+        start = None
+        end = None
+        flag = False
+        idx = 0
+        replaced = ""
+        while idx < len(match.group()):
+            char = match.group()[idx]
+            if char == "[":
+                replaced += "("
+            elif char == "]":
+                if replaced[-1] == "|":
+                    replaced = replaced[:-1] + ")"  # remove the last character
+                else:
+                    replaced += ")"
+            elif char == "-":
+                flag = True
+            else:
+                if flag:
+                    end = char
+                    flag = False
+                    for i in range(ord(start), ord(end) + 1):
+                        replaced += chr(i)
+                        replaced += "|"
+                else:
+                    start = char
+                    replaced += chr(ord(char))
+                    replaced += "|"
+            idx += 1
+        return replaced
+
+    # insert . operator between adjacent characters
+    def insert_dot(self, match):
+        new_pattern = []
+        for i in range(len(match) - 1):
+            a = match[i]
+            b = match[i + 1]
+            # catches [*(  , +( , ?( , )( , a( ] || [ab or )a , *a , +a , ?a]
+            new_pattern.append(a)
+            if (a.isalnum() or a == ")" or a in "*+?") and (b.isalnum() or b == "("):
+                new_pattern.append(".")
+        new_pattern.append(match[-1])
+        return "".join(new_pattern)
+
+    def clean_regex(self):
+        pattern = re.sub(r"\[.*?\]", self.replace_range, self.regex)
+        self.postfix = self.insert_dot(pattern)
+        return self.postfix
+
+    def shunting_yard(self):
+        # apply the shunting yard algorithm to convert the infix regular expression to postfix
+
         # we will order regular expressions syntax is listed as in the documentation
         # supported regex syntax
-        operators = {"(":0,"|": 1, ".": 2, "?": 3, "+": 4, "*": 5}
-        regex = self.regex
-
-        # Check if the regular expression contains any character classes (denoted by square brackets).
-        # If a character class is found, the function converts it to an "alternation" #!`() between the characters inside the class`.
-        # as example: [xyz] => (x|y|z) and [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
-
-        for i in range(len(regex)):
-            operator = regex[i]
-            if operator == "[":
-                j = i + 1
-                while regex[j] != "]":
-                    if regex[j].isalnum() and regex[j + 1].isalnum():
-                        regex = regex[: j + 1] + "|" + regex[j + 1 :]
-                        print("regex[j + 1:]: ", regex[j + 1:])
-                        print("regex[: j + 1]: ", regex[: j + 1])
-                    j += 1
-
-        # then, replace the character class with the new alternation
-        regex = regex.replace("[", "(").replace("]", ")")
-        print("regex after replacing character classes: ", regex)
-
-        ############################################################
-        ############################################################
-
-        # replace hyphen with operator "|" to separate the range of characters in the character class
-        # as example: [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
-        # as example: [a-z] will be converted to (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z) and so on.
-        self.postfix = regex[:]
-        hyphens_count = self.postfix.count("-")
-        # print("hyphens_count: ", hyphens_count)
-        # print("self.postfix: ", len(self.postfix))
-        for i in range(hyphens_count):
-            for j in range(len(self.postfix)):
-                operator = self.postfix[j]
-                # if (a-z) ==> (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)
-                if operator == "-":
-                    temp = ""
-                    end = ord(self.postfix[j + 1])
-                    start = ord(self.postfix[j - 1])
-                    # The line `# print("regex[j - 1]: ", self.postfix[j - 1])` is a commented-out
-                    # print statement in the code. It is not currently active and does not affect the
-                    # functionality of the code.
-                    # print("start: ", start)
-                    # print("end: ", end)
-                    # print("regex[j]: ", self.postfix)
-                    # print("regex[j - 1]: ", self.postfix[j - 1])
-                    # print("regex[j + 1]: ", self.postfix[j + 1])
-                    for z in range(int(end - start)):
-                        temp += "|"
-                        char = chr(start + z + 1)
-                        temp += char
-                    self.postfix = self.postfix[0:j] + temp + self.postfix[j + 2 :]
-                    break
-        print("regex after replacing hyphens with alternation: ", self.postfix)
-        
-        # insert . operator between adjacent characters
-        dots_container = []
-        start_ops = ["*", ")", "+"]
-        end_ops = ["*", "+",".", ")", "|"]
-
-        for i in range(len(self.postfix) - 1):
-            if self.postfix[i].isalnum() and (self.postfix[i + 1].isalnum() or self.postfix[i + 1] == "("):
-                dots_container.append(i)
-            elif self.postfix[i] in start_ops and self.postfix[i + 1] not in end_ops:
-                dots_container.append(i)
-
-        for i in range(len(dots_container)):
-            self.postfix = self.postfix[: dots_container[i] + i+ 1] + "." + self.postfix[dots_container[i] +i + 1 :]
-
-        ############################################################
-        ############################################################
-        print("regex after inserting . operator: ", self.postfix)
-
-        # apply the shunting yard algorithm to convert the infix regular expression to postfix
+        operators = {"|": 1, ".": 2, "*": 3, "+": 3, "?": 3}
         stack = []
-        postfix = ""
-        for i in range(len(self.postfix)):
-            operator = self.postfix[i]
+        postfix = []
+        for operator in self.postfix:
             if operator == "(":
                 stack.append(operator)
             elif operator == ")":
                 while stack[-1] != "(":
-                    postfix += stack.pop()
-                stack.pop() #! ==> remove the left parenthesis '('
+                    postfix.append(stack.pop())
+                stack.pop()  #! ==> remove the left parenthesis '('
+            elif (
+                stack and operator in operators and stack[-1] == "("
+            ):  #! ==> if the operator is an operator and the top of the stack is a left parenthesis
+                stack.append(operator)
             elif operator in operators:
-                while stack and operators[operator] <= operators[stack[-1]]:
-                    postfix += stack.pop() 
+                while (
+                    stack
+                    and operators[operator] <= operators[stack[-1]]
+                    and stack[-1] != "("
+                ):
+                    postfix += stack.pop()
                 stack.append(operator)
             else:
-                postfix += operator
+                postfix.append(operator)
             # print("stack: ", stack)
             # print("postfix: ", postfix)
         while stack:
-            postfix += stack.pop()
+            postfix.append(stack.pop())
 
-        # print("final postfix: ", postfix)
-
-        return postfix
+        prefix = "".join(postfix)
+        return postfix, prefix

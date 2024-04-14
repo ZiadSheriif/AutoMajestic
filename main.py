@@ -6,7 +6,7 @@ if __name__ == "__main__":
         # r"ab[ce-df",
         r"ab+",
         # r"ab]",
-        r"abb+a?(a|b)",
+        # r"abb+a?(a|b)",
         # r"aab+a*ba(a|b)",
     ]
 

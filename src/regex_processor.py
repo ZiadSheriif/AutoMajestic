@@ -23,22 +23,27 @@ class RegexProcessor:
         if not regex_validator.validate():
             return "Error", None, None
 
+        # clean the regex
+        cleaned_regex = regex_validator.clean_regex()
+        print(f"\033[1;32mCleaned regex: {cleaned_regex}\n\033[0m")
+
         # Convert the regex to postfix notation
-        postfix_regex = regex_validator.post_validate()
+        postfix_regex = regex_validator.shunting_yard()
         print(f"\033[1;32mPostfix notation: {postfix_regex}\n\033[0m")
+        
 
         # Convert the regex to an NFA
-        nfa = NFA(postfix=postfix_regex)
-        # print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
-        nfa.visualize(name=f"output/nfa/nfa_{idx}.gv", view=False)
+        # nfa = NFA(postfix=postfix_regex)
+        # # print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
+        # nfa.visualize(name=f"output/nfa/nfa_{idx}.gv", view=False)
 
-        # Convert the NFA to a DFA
-        dfa = DFA(nfa)
-        # print(f"\033[1;36mDFA: {dfa.to_graph()}\n\033[0m")
-        dfa.visualize(name=f"output/dfa/dfa_{idx}.gv", view=False)
+        # # Convert the NFA to a DFA
+        # dfa = DFA(nfa)
+        # # print(f"\033[1;36mDFA: {dfa.to_graph()}\n\033[0m")
+        # dfa.visualize(name=f"output/dfa/dfa_{idx}.gv", view=False)
 
-        # Minimize the DFA
-        minimized_dfa = MIN_DFA(dfa)
-        minimized_dfa.visualize(name=f"output/min-dfa/min-dfa_{idx}.gv", view=False)
+        # # Minimize the DFA
+        # minimized_dfa = MIN_DFA(dfa)
+        # minimized_dfa.visualize(name=f"output/min-dfa/min-dfa_{idx}.gv", view=False)
 
-        return "Success", nfa, minimized_dfa
+        return "Success",None,None
