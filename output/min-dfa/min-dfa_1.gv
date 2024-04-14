@@ -1,7 +1,0 @@
-digraph MIN_DFA {
-	1 [shape=doublecircle]
-	1 -> 2 [label=b]
-	3 [shape=circle]
-	3 -> 1 [label=a]
-	rankdir=LR
-}
