@@ -9,7 +9,7 @@ class RegexProcessor:
     def __init__(self, regex):
         self.regex = regex
 
-    def process(self):
+    def process(self, idx):
         create_directory("output/nfa")
         create_directory("output/dfa")
         create_directory("output/min-dfa")
@@ -25,21 +25,20 @@ class RegexProcessor:
 
         # Convert the regex to postfix notation
         postfix_regex = regex_validator.post_validate()
-        print(f"\033[1;32mPostfix notation:\n{postfix_regex}\n\033[0m")
+        print(f"\033[1;32mPostfix notation: {postfix_regex}\n\033[0m")
 
         # Convert the regex to an NFA
         nfa = NFA(postfix=postfix_regex)
-        print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
-        nfa.visualize(name="output/nfa/nfa.gv", view=False)
+        # print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
+        nfa.visualize(name=f"output/nfa/nfa_{idx}.gv", view=False)
 
         # Convert the NFA to a DFA
         dfa = DFA(nfa)
-        print(f"\033[1;36mDFA: {dfa.to_graph()}\n\033[0m")
-        dfa.visualize(name="output/dfa/dfa.gv", view=False)
+        # print(f"\033[1;36mDFA: {dfa.to_graph()}\n\033[0m")
+        dfa.visualize(name=f"output/dfa/dfa_{idx}.gv", view=False)
 
         # Minimize the DFA
         minimized_dfa = MIN_DFA(dfa)
-        print(f"\033[1;36mMinimized DFA: {minimized_dfa.to_graph()}\n\033[0m")
-        minimized_dfa.visualize(name="output/min-dfa/min-dfa.gv", view=False)
+        minimized_dfa.visualize(name=f"output/min-dfa/min-dfa_{idx}.gv", view=False)
 
         return "Success", nfa, minimized_dfa

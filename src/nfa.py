@@ -40,10 +40,15 @@ class NFA:
                 if state not in visited:
                     queue.append(state)
                     visited.add(state)
-        
-        states.sort(key=lambda x: x.label)
-        # print("Final Labels of States: ", [state.label for state in states])
+      
+        states= self.rename_states(states)
             
+        return states
+        
+    def rename_states(self,states):
+        for i in range(len(states)):
+            states[i].label = "S" + str(i+1)
+        states.sort(key=lambda x: x.label)
         return states
 
     def get_accepting_states(self):
@@ -78,7 +83,7 @@ class NFA:
         return list(symbols)
         
         
-        
+    # *   
     def handle_closure(char, nfa_stack):
         state_1 = nfa_stack.pop()
         start =  NFA.get_new_state()
@@ -88,7 +93,7 @@ class NFA:
         state_1.accept.add_transition("ε", start)
         state_1.accept.add_transition("ε", accept)
         nfa_stack.append(NFA(start, accept))
-        
+    # |   
     def handle_alternation(char, nfa_stack):
         state_2 = nfa_stack.pop()
         state_1 = nfa_stack.pop()
@@ -101,14 +106,14 @@ class NFA:
         nfa_stack.append(NFA(start, accept))
 
         
-        
+     # .   
     def handle_concatenation(char, nfa_stack):
         state_2 = nfa_stack.pop()
         state_1 = nfa_stack.pop()                
         state_1.accept.add_transition("ε", state_2.start)
         nfa_stack.append(NFA(state_1.start, state_2.accept))
 
-        
+     # +   
     def handle_positive_closure(char, nfa_stack):
         state_1 = nfa_stack.pop()
         start =  NFA.get_new_state()
@@ -118,7 +123,7 @@ class NFA:
         state_1.accept.add_transition("ε", accept)
         nfa_stack.append(NFA(start, accept))
 
-        
+     # ?   
     def handle_optional(char, nfa_stack):
         state_1 = nfa_stack.pop()
         start =  NFA.get_new_state()
@@ -128,7 +133,7 @@ class NFA:
         state_1.accept.add_transition("ε", accept)
         nfa_stack.append(NFA(start, accept))
 
-        
+     # a-z, A-Z, 0-9   
     def handle_alpha_numeric(char, nfa_stack):
         start =  NFA.get_new_state()
         accept =  NFA.get_new_state()
@@ -159,6 +164,7 @@ class NFA:
     def to_graph(self):
 
         states = {}
+        print("States: ", [state.label for state in self.get_states()])
         for state in self.get_states():
             state_graph = {
                 "isTerminatingState": state.is_accepting,

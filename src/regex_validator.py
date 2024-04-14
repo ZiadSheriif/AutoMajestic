@@ -40,7 +40,7 @@ class RegexValidator:
 
         # then, replace the character class with the new alternation
         regex = regex.replace("[", "(").replace("]", ")")
-        print(regex)
+        print("regex after replacing character classes: ", regex)
 
         ############################################################
         ############################################################
@@ -49,7 +49,6 @@ class RegexValidator:
         # as example: [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
         # as example: [a-z] will be converted to (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z) and so on.
         self.postfix = regex[:]
-        print(self.postfix)
         hyphens_count = self.postfix.count("-")
         # print("hyphens_count: ", hyphens_count)
         # print("self.postfix: ", len(self.postfix))
@@ -61,11 +60,14 @@ class RegexValidator:
                     temp = ""
                     end = ord(self.postfix[j + 1])
                     start = ord(self.postfix[j - 1])
-                    print("start: ", start)
-                    print("end: ", end)
-                    print("regex[j]: ", self.postfix)
-                    print("regex[j - 1]: ", self.postfix[j - 1])
-                    print("regex[j + 1]: ", self.postfix[j + 1])
+                    # The line `# print("regex[j - 1]: ", self.postfix[j - 1])` is a commented-out
+                    # print statement in the code. It is not currently active and does not affect the
+                    # functionality of the code.
+                    # print("start: ", start)
+                    # print("end: ", end)
+                    # print("regex[j]: ", self.postfix)
+                    # print("regex[j - 1]: ", self.postfix[j - 1])
+                    # print("regex[j + 1]: ", self.postfix[j + 1])
                     for z in range(int(end - start)):
                         temp += "|"
                         char = chr(start + z + 1)
@@ -114,6 +116,6 @@ class RegexValidator:
         while stack:
             postfix += stack.pop()
 
-        print("final postfix: ", postfix)
+        # print("final postfix: ", postfix)
 
         return postfix

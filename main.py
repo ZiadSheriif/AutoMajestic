@@ -6,7 +6,7 @@ if __name__ == "__main__":
         # r"ab[ce-df",
         r"ab+",
         # r"ab]",
-        # r"abb+a?(a|b)",
+        r"abb+a?(a|b)",
         # r"aab+a*ba(a|b)",
     ]
 
@@ -16,7 +16,7 @@ if __name__ == "__main__":
         print("Regex:", test_case)
 
         processor = RegexProcessor(test_case)
-        status, nfa, minimized_dfa = processor.process()
+        status, nfa, minimized_dfa = processor.process(idx)
 
         if status == "Success":
             print("Processing successful!")
