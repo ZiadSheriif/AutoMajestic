@@ -91,7 +91,6 @@ class NFA:
 
         self.start = start
         self.accept = accept
-        self.add_epsilon_transitions(self.start, self.accept)
         nfa_stack.append(state_1)
 
     # (?)
@@ -116,15 +115,79 @@ class NFA:
 
 
 def visualize(name="output/nfa/nfa.gv", view=False):
-    nfa_graph = {
-        "S1": {"a": "S2", "isTerminatingState": False},
-        "S2": {"ε": "S5", "isTerminatingState": False},
-        "S3": {"b": "S4", "isTerminatingState": False},
-        "S4": {"ε": ["S3", "S6"], "isTerminatingState": False},
-        "S5": {"ε": ["S3", "S6"], "isTerminatingState": False},
-        "S6": {"isTerminatingState": True},
-        "startingState": "S1",
-    }
+    nfa_graph ={
+      "S1": {
+            "a": "S2",
+            "isTerminatingState": False
+      },
+      "S2": {
+            "ε": "S3",
+            "isTerminatingState": False
+      },
+      "S3": {
+            "b": "S4",
+            "isTerminatingState": False
+      },
+      "S4": {
+            "ε": "S7",
+            "isTerminatingState": False
+      },
+      "S5": {
+            "b": "S6",
+            "isTerminatingState": False
+      },
+      "S6": {
+            "ε": [
+                  "S5",
+                  "S8"
+            ],
+            "isTerminatingState": False
+      },
+      "S7": {
+            "ε": "S5",
+            "isTerminatingState": False
+      },
+      "S8": {
+            "ε": "S9",
+            "isTerminatingState": False
+      },
+      "S9": {
+            "a": "S10",
+            "ε": "S10",
+            "isTerminatingState": False
+      },
+      "S10": {
+            "ε": "S15",
+            "isTerminatingState": False
+      },
+      "S11": {
+            "a": "S12",
+            "isTerminatingState": False
+      },
+      "S12": {
+            "ε": "S16",
+            "isTerminatingState": False
+      },
+      "S15": {
+            "ε": [
+                  "S11",
+                  "S13"
+            ],
+            "isTerminatingState": False
+      },
+      "S16": {
+            "isTerminatingState": True
+      },
+      "S13": {
+            "b": "S14",
+            "isTerminatingState": False
+      },
+      "S14": {
+            "ε": "S16",
+            "isTerminatingState": False
+      },
+      "startingState": "S1"
+}
     print("NFA Graph: ", nfa_graph)
     graph = graphviz.Digraph(name="NFA", engine="dot")
     for state in nfa_graph:
