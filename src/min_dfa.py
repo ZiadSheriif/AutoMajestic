@@ -11,6 +11,7 @@ class MIN_DFA:
 
         states = self.dfa.to_graph()
         symbols = self.dfa.get_symbols()
+        print("############################################ Min Dfa #########################################")
         print("Symbols: ", symbols)
         print("States: ", states)
         # for key in list(states.keys())[1:]:
@@ -46,38 +47,61 @@ class MIN_DFA:
         #! #############    Step 2: Split the groups until no further splits are possible  #############
         #! for each group split the group into subgroups based on the transitions of each state ,
         #! if there is a transition to a state in another group then split the group
-        
-        is_split = True
-        while is_split: #All Groups:  [[{'b': 'S3 S4 S5 S6', 'isTerminatingState': True}, {'b': 'S3 S4 S5 S6', 'isTerminatingState': True}], [{'a': 'S2 S3 S5 S6', 'isTerminatingState': False}]]
-            is_split = False 
-            for idx, group in enumerate(all_groups): #Group:  [{'b': 'S3 S4 S5 S6', 'isTerminatingState': True}, {'b': 'S3 S4 S5 S6', 'isTerminatingState': True}], idx: 0, [{'a': 'S2 S3 S5 S6', 'isTerminatingState': False}] idx:  1
-                if not group:
-                    continue
-                new_groups = {}
-                first_state = next(iter(group)) # {'b': 'S3 S4 S5 S6', 'isTerminatingState': True}
-                print("First State: ", first_state)
-                for key, value in first_state.items():
-                    for symbol in symbols:
-                        print("Symbol: ", value, symbol)
-                        if symbol in value:
-                           new_groups[symbol] = [jdy for jdy,group in enumerate(all_groups) if value[symbol] in get_keys_by_group_state(group)][0]
-                print("New Groups: ", new_groups)
+        symbol_groups = {}
+        for i in range(len(all_groups)):
+            print("\n")
+            print("\n")
+            current_group = all_groups[i]
+            print("Current Group: ",current_group)
             
-                separated_states = []
-                for k, v in enumerate(group):
-                    out_groups={}
-                    for key, value in v.items():
-                        for symbol in symbols:
-                            if symbol in value:
-                                list_of_groups = [jdy for jdy,group in enumerate(all_groups) if value[symbol] in get_keys_by_group_state(group)]
-                                out_groups[symbol] = list_of_groups[0]
-                    if out_groups != new_groups:
-                        separated_states.append(v)
-                        is_split = True
-                if len(separated_states) > 0:
-                    all_groups.insert(idx+1, list(separated_states))
-                    all_groups[idx] = [x for x in group if x not in separated_states]
-                
+            symbol_groups = {}
+            for j in range(len(current_group)):
+                current_state = current_group[j]
+                for key, value in current_state.items():
+                    for symbol in symbols:
+                        if symbol in value:
+                            for k in range(len(all_groups)):
+                                for state in all_groups[k]:
+                                    if (value[symbol] in state):
+                                        print(value[symbol], " is in group ",k)
+                                        if symbol not in symbol_groups:
+                                            symbol_groups[symbol] = {}
+                                        if k not in symbol_groups[symbol]:
+                                            symbol_groups[symbol][k] = [current_state]
+                                        else:
+                                            symbol_groups[symbol][k].append(current_state)
+
+                        else:
+                            print("State: ",current_state," don't have symbol ",symbol)
+                            k = "none"
+                            if symbol not in symbol_groups:
+                                            symbol_groups[symbol] = {}
+                            if k not in symbol_groups[symbol]:
+                                symbol_groups[symbol][k] = [current_state]
+                            else:
+                                symbol_groups[symbol][k].append(current_state)
+            
+            for key, value in symbol_groups.items():
+                print("Key: ", key, " value: ", value)
+                # Check if the symbol is present in multiple groups
+                if len(value) > 1:
+                    all_groups[i] = []
+                    new_groups = []
+                    # Extract states associated with each group
+                    for group_index, states in value.items():
+                        print("group_index",group_index)
+                        print("states: ",states)
+                        all_groups.append(states)
+                        # Remove original group from all_groups
+                    # Insert the extracted states into all_groups and reset i to 0
+                    
+                    i = 0
+                    break
+            print("All groups: ", all_groups)        
+        # Remove empty groups from all_groups            
+        all_groups = [group for group in all_groups if group]     
+
+
 
                     
         #! Step 3: Create the minimized DFA
@@ -86,7 +110,11 @@ class MIN_DFA:
         return self.min_dfa_states
 
     def create_minimized_states(self, groups):
-        # print("Groups in MIN_DFA: ", groups)
+        print("########################################################################################")
+        print("\n\n")
+        print("Groups in MIN_DFA: ", groups)
+        print("########################################################################################")
+        print("\n\n")
         #![[{'S2 S3 S5 S6': {'b': 'S4 S6', 'isTerminatingState': True}}], [{'S4 S6': {'isTerminatingState': True}}], [{'S1': {'a': 'S2 S3 S5 S6', 'isTerminatingState': False}}]]
         condensed_states = {}
         # print("Groups in MIN_DFA: ", groups)
@@ -97,21 +125,27 @@ class MIN_DFA:
                 for key, value in state.items():
                     condensed_states[key] = str(idx)
         
+        print("condensed_states: ",condensed_states)
         new_groups = {'startingState': 1}
-        copy_groups = groups.copy()
-        for idx, group in enumerate(copy_groups,start=1):
+    
+        for idx, group in enumerate(groups,start=1):
             # iterate over each state in the group    
             for state in group:
                 # iterate over each symbol in the state
                 for key, value in state.items():
                     # iterate over each symbol in the state
                     for symbol, next_state in value.items():
-                        # check if the next state is in the condensed states , then update the value of the state
-                        if next_state in condensed_states:
-                            value[symbol] = str(condensed_states[next_state])
-                            new_groups[str(idx)] = value
-        
-        # print("New Groups in DFA: ", new_groups)
+                        if symbol!='isTerminatingState':
+                            print(next_state)
+                            # check if the next state is in the condensed states , then update the value of the state
+                            if next_state in condensed_states:
+                                value[symbol] = str(condensed_states[next_state])
+                                new_groups[str(idx)] = value
+                                
+        for state, group_index in condensed_states.items():
+            if group_index not in new_groups:
+                new_groups[group_index] = {'isTerminatingState': True}
+        print("New Groups in DFA: ", new_groups)
         #! New Groups in DFA: {'startingState': 1, '1': {'b': '2', 'isTerminatingState': True}, '3': {'a': '1', 'isTerminatingState': False}}            
         return new_groups
 
