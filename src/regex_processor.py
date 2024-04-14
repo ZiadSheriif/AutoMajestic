@@ -1,5 +1,5 @@
 from src.regex_validator import RegexValidator
-from src.nfa import NFA
+from src.nfa import NFA, construct_nfa
 from src.dfa import DFA
 from src.min_dfa import MIN_DFA
 from utils.helpers import create_directory
@@ -28,13 +28,14 @@ class RegexProcessor:
         print(f"\033[1;32mCleaned regex: {cleaned_regex}\n\033[0m")
 
         # Convert the regex to postfix notation
-        postfix_regex = regex_validator.shunting_yard()
+        postfix_regex,_ = regex_validator.shunting_yard()
         print(f"\033[1;32mPostfix notation: {postfix_regex}\n\033[0m")
         
 
         # Convert the regex to an NFA
-        # nfa = NFA(postfix=postfix_regex)
-        # # print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
+        nfa = construct_nfa(postfix_regex)
+        print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
+        # print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
         # nfa.visualize(name=f"output/nfa/nfa_{idx}.gv", view=False)
 
         # # Convert the NFA to a DFA
