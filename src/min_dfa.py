@@ -137,14 +137,24 @@ class MIN_DFA:
         #![[{'S2 S3 S5 S6': {'b': 'S4 S6', 'isTerminatingState': True}}], [{'S4 S6': {'isTerminatingState': True}}], [{'S1': {'a': 'S2 S3 S5 S6', 'isTerminatingState': False}}]]
         condensed_states = {}
         # print("Groups in MIN_DFA: ", groups)
-        
+
+        # This function to sort groups to visualize it correct
+        def sort_key(group):
+            first_state = list(group[0].keys())[0]
+            first_state_num = int(first_state.split("S")[-1])
+            return first_state_num
+
+    
+        groups = sorted(groups, key=sort_key)
+
+        print("All groups in MIN_DFA: ", groups)
         for idx, group in enumerate(groups,start=1):
             for state in group:
                 # for all states in the group, update the name of the state to the index of the group
                 for key, value in state.items():
                     condensed_states[key] = str(idx)
         
-        # print("condensed_states: ",condensed_states)
+        print("condensed_states: ",condensed_states)
         new_groups = {'startingState': 1}
     
         for idx, group in enumerate(groups,start=1):
@@ -189,8 +199,8 @@ class MIN_DFA:
         
         for state, transitions in self.min_dfa_states.items():
             if state == "startingState":
-                # graph.node("", shape="none")
-                # graph.edge("", "1")
+                graph.node("", shape="none")
+                graph.edge("", "1", color="blue",)
                 continue
                 
             if transitions["isTerminatingState"]:
