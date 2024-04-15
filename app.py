@@ -15,6 +15,7 @@ CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 create_directory("output/nfa")
 create_directory("output/dfa")
 create_directory("output/min-dfa")
+group_mapping = {}
 
 
 def pdf_to_png(pdf_path, png_path):
@@ -36,18 +37,20 @@ def run_pipeline(regex, step):
         return None
 
     # Convert the regex to postfix notation
-    postfix_regex = regex_validator.post_validate()
+    postfix_regex = regex_validator.post_validate(group_mapping)
     print("Postfix notation:", postfix_regex)
 
     # Convert the regex to an NFA
     nfa = NFA(postfix=postfix_regex)
-    nfa.visualize(name=f"output/nfa/nfa.gv", view=False, pattern=regex)
+    nfa.to_graph(group_mapping)
+    nfa.visualize(name=f"output/nfa/nfa.gv", view=False, pattern=regex, group_mapping=group_mapping)
 
     if step == "dfa" or step == "min-dfa":
         dfa = DFA(nfa)
         dfa.visualize(name=f"output/dfa/dfa.gv", view=False, pattern=regex)
         if step == "min-dfa":
             dfa_min = MIN_DFA(dfa)
+            dfa_min.to_graph(group_mapping)
             dfa_min.visualize(name="output/min-dfa/min-dfa.gv", view=False, pattern=regex)
             return dfa_min
         return dfa
