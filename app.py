@@ -10,7 +10,7 @@ from src.min_dfa import MIN_DFA
 from utils.helpers import create_directory
 
 app = Flask(__name__)
-CORS(app, resources={r"*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 create_directory("output/nfa")
 create_directory("output/dfa")
@@ -41,14 +41,16 @@ def run_pipeline(regex, step):
 
     # Convert the regex to an NFA
     nfa = NFA(postfix=postfix_regex)
-    nfa.visualize(name=f"output/nfa/nfa.gv", view=False,pattern=regex)
+    # nfa.visualize(name=f"output/nfa/nfa.gv", view=False, pattern=regex)
 
     if step == "dfa" or step == "min-dfa":
         dfa = DFA(nfa)
-        dfa.visualize(name=f"output/dfa/dfa.gv", view=False,pattern=regex)
+        dfa.visualize(name=f"output/dfa/dfa.gv", view=False, pattern=regex)
         if step == "min-dfa":
             dfa_min = MIN_DFA(dfa)
-            dfa_min.visualize(name="output/min-dfa/min-dfa.gv", view=False,pattern=regex)
+            dfa_min.visualize(
+                name="output/min-dfa/min-dfa.gv", view=False, pattern=regex
+            )
             return dfa_min
         return dfa
 
@@ -60,6 +62,7 @@ def compile_regex_pipeline(step):
     automaton = run_pipeline(regex, step)
     if automaton is None:
         return "Invalid regex", 400
+    return jsonify({"Result: ":automaton.to_graph()})
 
     # pdf_to_png(f"output/{step}/{step}.gv.pdf", f"output/{step}/{step}.png")
 
@@ -87,7 +90,15 @@ def compile_min_dfa():
 
 @app.route("/", methods=["GET"])
 def home():
-    return "Welcome to the server!"
+    return """
+    <html>
+        <body style="background-color: #282c34; color: #61dafb; font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h1>Welcome to our server!</h1>
+            <p>This server is powered by Flask and deployed on Vercel. It's designed to compile regular expressions into nondeterministic finite automata.</p>
+        </body>
+    </html>
+    """
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=5000, debug=False)
+    app.run(port=5000, debug=False)
