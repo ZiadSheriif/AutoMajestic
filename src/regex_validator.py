@@ -9,7 +9,7 @@ class RegexValidator:
 
     def validate(self):
         try:
-            if self.regex.count('[') != self.regex.count(']'):
+            if self.regex.count('[') != self.regex.count(']') or self.regex.count('(') != self.regex.count(')'):
                 print("Invalid regular expression: unmatched brackets")
                 return False
             re.compile(self.regex)
@@ -18,59 +18,44 @@ class RegexValidator:
             return False
         return True
 
-    def post_validate(self):
-        # we will order regular expressions syntax is listed as in the documentation
-        # supported regex syntax
-        operators = {"(":0,"|": 1, ".": 2, "?": 3, "+": 4, "*": 5}
-        regex = self.regex
-
-        # Check if the regular expression contains any character classes (denoted by square brackets).
-        # If a character class is found, the function converts it to an "alternation" #!`() between the characters inside the class`.
-        # as example: [xyz] => (x|y|z) and [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
-        def replace_class(regex):
-            in_class = False
-            result = ""
-            current_group = ""
-            alphabet = ord('A')  
-            for char in regex:
-                if char == '[':
-                    in_class = True
-                    result += char
-                elif char == ']':
-                    in_class = False
-                    self.group_mapping[chr(alphabet)] = current_group
-                    result += chr(alphabet)+char
-                    alphabet += 1
-                elif in_class:
-                        current_group+= char
-                else:
-                    result += char
-            return result
-        regex = replace_class(regex)
-
-        # then, replace the character class with the new alternation
-        regex = regex.replace("[", "(").replace("]", ")")
-        print("regex after replacing character classes: ", regex)
-
-        ############################################################
-        ############################################################
-
-        # replace hyphen with operator "|" to separate the range of characters in the character class
-        # as example: [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
-        # as example: [a-z] will be converted to (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z) and so on.
-        self.postfix = regex[:]
-        hyphens_count = self.postfix.count("-")
-        # print("hyphens_count: ", hyphens_count)
-        # print("self.postfix: ", len(self.postfix))
+    
+    # Check if the regular expression contains any character classes (denoted by square brackets).
+    # If a character class is found, the function converts it to an "alternation" #!`() between the characters inside the class`.
+    # as example: [xyz] => (x|y|z) and [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
+    def replace_class(self,regex):
+        in_class = False
+        result = ""
+        current_group = ""
+        alphabet = ord('A')  
+        for char in regex:
+            if char == '[':
+                in_class = True
+                result += char
+            elif char == ']':
+                in_class = False
+                self.group_mapping[chr(alphabet)] = current_group
+                result += chr(alphabet)+char
+                alphabet += 1
+            elif in_class:
+                    current_group+= char
+            else:
+                result += char
+        return result
+        
+        
+    #! replace hyphen with operator "|" to separate the range of characters in the character class
+    # as example: [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
+    # as example: [a-z] will be converted to (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z) and so on.   
+    def detect_hyphen(self,regex):
+        hyphens_count = regex.count("-")
         for i in range(hyphens_count):
-            for j in range(len(self.postfix)):
-                operator = self.postfix[j]
+            for j in range(len(regex)):
+                operator = regex[j]
                 # if (a-z) ==> (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)
                 if operator == "-":
                     temp = ""
-                    end = ord(self.postfix[j + 1])
-                    start = ord(self.postfix[j - 1])
-                    # The line `# print("regex[j - 1]: ", self.postfix[j - 1])` is a commented-out
+                    end = ord(regex[j + 1])
+                    start = ord(regex[j - 1])
                     # print statement in the code. It is not currently active and does not affect the
                     # functionality of the code.
                     # print("start: ", start)
@@ -82,9 +67,28 @@ class RegexValidator:
                         temp += "|"
                         char = chr(start + z + 1)
                         temp += char
-                    self.postfix = self.postfix[0:j] + temp + self.postfix[j + 2 :]
+                    regex = regex[0:j] + temp + regex[j + 2 :]
                     break
-        print("regex after replacing hyphens with alternation: ", self.postfix)
+        return regex
+    def post_validate(self):
+        # we will order regular expressions syntax is listed as in the documentation
+        # supported regex syntax
+        operators = {"(":0,"|": 1, ".": 2, "?": 3, "+": 4, "*": 5}
+        regex = self.regex
+        
+        
+        
+        #! first, replace the character class with a new character class
+        self.postfix = self.replace_class(regex)
+
+        #! then, replace the character class with the new alternation
+        self.postfix = self.postfix.replace("[", "(").replace("]", ")")
+        print("regex after replacing character classes: ", self.postfix)
+
+        ############################################################
+        ############################################################
+        # self.postfix = self.detect_hyphen(self.postfix)
+        # print("regex after replacing hyphens with alternation: ", self.postfix)
         
         # insert . operator between adjacent characters
         dots_container = []
