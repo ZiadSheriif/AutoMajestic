@@ -1,4 +1,4 @@
 build-essential
 pkg-config
-graphviz
+default-libgraphviz-dev
 
