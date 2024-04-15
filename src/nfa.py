@@ -1,6 +1,9 @@
 from src.state import State
 from utils.helpers import dump_json
 import graphviz
+import os
+os.environ["PATH"] += os.pathsep + "/path/to/graphviz/binaries"
+
 import base64
 
 
