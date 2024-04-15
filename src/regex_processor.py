@@ -30,7 +30,7 @@ class RegexProcessor:
         # Convert the regex to an NFA
         nfa = NFA(postfix=postfix_regex)
         # print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
-        nfa.visualize(name=f"output/nfa/nfa_{idx}.gv", view=False)
+        nfa.visualize(name=f"output/nfa/nfa_{idx}.gv", view=False,pattern=self.regex)
 
         # Convert the NFA to a DFA
         dfa = DFA(nfa)

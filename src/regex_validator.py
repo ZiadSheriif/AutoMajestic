@@ -78,8 +78,8 @@ class RegexValidator:
         
         # insert . operator between adjacent characters
         dots_container = []
-        start_ops = ["*", ")", "+"]
-        end_ops = ["*", "+",".", ")", "|"]
+        start_ops = ["*", ")", "+","?"]
+        end_ops = ["*", "+",".", ")", "|", "?"]
 
         for i in range(len(self.postfix) - 1):
             if self.postfix[i].isalnum() and (self.postfix[i + 1].isalnum() or self.postfix[i + 1] == "("):
@@ -117,5 +117,5 @@ class RegexValidator:
             postfix += stack.pop()
 
         # print("final postfix: ", postfix)
-
+        # return "a.b?.a.b."
         return postfix

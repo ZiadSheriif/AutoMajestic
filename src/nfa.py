@@ -185,7 +185,7 @@ class NFA:
             **states,
         }
 
-    def visualize(self, name="output/nfa/nfa.gv", view=False):
+    def visualize(self, pattern,name="output/nfa/nfa.gv", view=False):
         nfa_graph = self.to_graph()
         graph = graphviz.Digraph(name="NFA",engine="dot")
 
@@ -208,7 +208,7 @@ class NFA:
                     graph.edge(state, child, label=symbol)
 
         graph.format = "png"
-        graph.attr(rankdir="LR")
+        graph.attr(rankdir="LR",label="NFA's pattern: " + pattern, fontname='bold')
         graph.render(name, view=view)
 
         return graph
