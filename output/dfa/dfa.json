@@ -5,19 +5,55 @@
             "isTerminatingState": false
       },
       "S2 S3": {
-            "b": "S4 S5 S7",
+            "a": "S4 S5 S7",
             "isTerminatingState": false
       },
       "S4 S5 S7": {
-            "b": "S11 S12 S5 S6 S7 S8 S9",
+            "b": "S11 S12 S13 S5 S6 S7 S8 S9",
             "isTerminatingState": false
       },
-      "S11 S12 S5 S6 S7 S8 S9": {
-            "a": "S10 S12",
-            "b": "S11 S12 S5 S6 S7 S8 S9",
+      "S11 S12 S13 S5 S6 S7 S8 S9": {
+            "b": "S11 S12 S13 S14 S15 S5 S6 S7 S8 S9",
+            "a": "S10 S11 S12 S13 S9",
+            "isTerminatingState": false
+      },
+      "S11 S12 S13 S14 S15 S5 S6 S7 S8 S9": {
+            "b": "S11 S12 S13 S14 S15 S5 S6 S7 S8 S9",
+            "a": "S10 S11 S12 S13 S16 S17 S19 S21 S9",
+            "isTerminatingState": false
+      },
+      "S10 S11 S12 S13 S9": {
+            "b": "S14 S15",
+            "a": "S10 S11 S12 S13 S9",
+            "isTerminatingState": false
+      },
+      "S10 S11 S12 S13 S16 S17 S19 S21 S9": {
+            "b": "S14 S15 S20 S22",
+            "a": "S10 S11 S12 S13 S18 S22 S9",
+            "isTerminatingState": false
+      },
+      "S14 S15": {
+            "a": "S16 S17 S19 S21",
+            "isTerminatingState": false
+      },
+      "S14 S15 S20 S22": {
+            "a": "S16 S17 S19 S21",
             "isTerminatingState": true
       },
-      "S10 S12": {
+      "S10 S11 S12 S13 S18 S22 S9": {
+            "b": "S14 S15",
+            "a": "S10 S11 S12 S13 S9",
+            "isTerminatingState": true
+      },
+      "S16 S17 S19 S21": {
+            "b": "S20 S22",
+            "a": "S18 S22",
+            "isTerminatingState": false
+      },
+      "S20 S22": {
+            "isTerminatingState": true
+      },
+      "S18 S22": {
             "isTerminatingState": true
       }
 }
