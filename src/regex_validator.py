@@ -5,6 +5,7 @@ class RegexValidator:
     def __init__(self, regex):
         self.regex = regex
         self.postfix = None
+        self.group_mapping = {} 
 
     def validate(self):
         try:
@@ -26,17 +27,26 @@ class RegexValidator:
         # Check if the regular expression contains any character classes (denoted by square brackets).
         # If a character class is found, the function converts it to an "alternation" #!`() between the characters inside the class`.
         # as example: [xyz] => (x|y|z) and [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
-
-        for i in range(len(regex)):
-            operator = regex[i]
-            if operator == "[":
-                j = i + 1
-                while regex[j] != "]":
-                    if regex[j].isalnum() and regex[j + 1].isalnum():
-                        regex = regex[: j + 1] + "|" + regex[j + 1 :]
-                        # print("regex[j + 1:]: ", regex[j + 1:])
-                        # print("regex[: j + 1]: ", regex[: j + 1])
-                    j += 1
+        def replace_class(regex):
+            in_class = False
+            result = ""
+            current_group = ""
+            alphabet = ord('A')  
+            for char in regex:
+                if char == '[':
+                    in_class = True
+                    result += char
+                elif char == ']':
+                    in_class = False
+                    self.group_mapping[chr(alphabet)] = current_group
+                    result += chr(alphabet)+char
+                    alphabet += 1
+                elif in_class:
+                        current_group+= char
+                else:
+                    result += char
+            return result
+        regex = replace_class(regex)
 
         # then, replace the character class with the new alternation
         regex = regex.replace("[", "(").replace("]", ")")
