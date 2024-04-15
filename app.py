@@ -41,7 +41,7 @@ def run_pipeline(regex, step):
 
     # Convert the regex to an NFA
     nfa = NFA(postfix=postfix_regex)
-    # nfa.visualize(name=f"output/nfa/nfa.gv", view=False, pattern=regex)
+    graph,base64_img=nfa.visualize(name=f"output/nfa/nfa.gv", view=False, pattern=regex)
 
     if step == "dfa" or step == "min-dfa":
         dfa = DFA(nfa)
@@ -54,7 +54,7 @@ def run_pipeline(regex, step):
             return dfa_min
         return dfa
 
-    return nfa
+    return base64_img
 
 
 def compile_regex_pipeline(step):
@@ -65,11 +65,11 @@ def compile_regex_pipeline(step):
 
     # pdf_to_png(f"output/{step}/{step}.gv.pdf", f"output/{step}/{step}.png")
 
-    with open(f"output/{step}/{step}.gv.png", "rb") as f:
-        image_data = f.read()
-        encoded_image = base64.b64encode(image_data).decode("utf-8")
+    # with open(f"output/{step}/{step}.gv.png", "rb") as f:
+    #     image_data = f.read()
+    #     encoded_image = base64.b64encode(image_data).decode("utf-8")
 
-    return jsonify({"image": encoded_image})
+    return jsonify({"image": automaton})
 
 
 @app.route("/compile/nfa", methods=["GET"])

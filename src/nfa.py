@@ -1,6 +1,8 @@
 from src.state import State
 from utils.helpers import dump_json
 import graphviz
+import base64
+
 
 class NFA:
 
@@ -177,7 +179,7 @@ class NFA:
             states[state.label] = state_graph
               
         # make a json object of the NFA graph
-        dump_json({"startingState": self.start.label, **states}, "output/nfa/nfa.json")
+        # dump_json({"startingState": self.start.label, **states}, "output/nfa/nfa.json")
             
             
         return {
@@ -207,8 +209,10 @@ class NFA:
                 for child in children:
                     graph.edge(state, child, label=symbol)
 
-        graph.format = "png"
         graph.attr(rankdir="LR",label="NFA's pattern: " + pattern, fontname='bold')
-        graph.render(name, view=view)
+        # graph.render(name, view=view)
+        
+        image_data = graph.pipe(format='png')
+        base64_image = base64.b64encode(image_data).decode('utf-8')
 
-        return graph
+        return graph, base64_image

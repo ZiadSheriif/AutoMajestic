@@ -5,38 +5,6 @@
             "a": "S2"
       },
       "S10": {
-            "isTerminatingState": false,
-            "a": "S12"
-      },
-      "S11": {
-            "isTerminatingState": false,
-            "ε": "S13"
-      },
-      "S12": {
-            "isTerminatingState": false,
-            "ε": "S11"
-      },
-      "S13": {
-            "isTerminatingState": false,
-            "ε": "S14,S15"
-      },
-      "S14": {
-            "isTerminatingState": false,
-            "a": "S16"
-      },
-      "S15": {
-            "isTerminatingState": false,
-            "b": "S17"
-      },
-      "S16": {
-            "isTerminatingState": false,
-            "ε": "S18"
-      },
-      "S17": {
-            "isTerminatingState": false,
-            "ε": "S18"
-      },
-      "S18": {
             "isTerminatingState": true
       },
       "S2": {
@@ -45,23 +13,23 @@
       },
       "S3": {
             "isTerminatingState": false,
-            "b": "S4"
+            "ε": "S4,S5"
       },
       "S4": {
             "isTerminatingState": false,
-            "ε": "S5"
+            "b": "S6"
       },
       "S5": {
             "isTerminatingState": false,
-            "ε": "S6"
+            "ε": "S7"
       },
       "S6": {
             "isTerminatingState": false,
-            "b": "S7"
+            "ε": "S5"
       },
       "S7": {
             "isTerminatingState": false,
-            "ε": "S5,S8"
+            "a": "S8"
       },
       "S8": {
             "isTerminatingState": false,
@@ -69,6 +37,6 @@
       },
       "S9": {
             "isTerminatingState": false,
-            "ε": "S10,S11"
+            "b": "S10"
       }
 }
