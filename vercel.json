@@ -1,12 +1,9 @@
 {
   "builds": [
     {
+      "version": 2,
       "src": "app.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "memory": "512"
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
