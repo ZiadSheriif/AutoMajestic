@@ -82,31 +82,31 @@ class DFA:
         
 
         
-    def visualize(self, name="output/dfa/dfa.gv", view=True,pattern=None):
+    def visualize(self, name="output/dfa/dfa.gv", view=True, pattern=None):
         graph = graphviz.Digraph(name="DFA", engine="dot")
         
         for state, transitions in self.dfa_states.items():
-    
+
             if state == "startingState":
-                graph.node("", shape="none")
-                graph.edge("", transitions)
+                graph.node("", shape="none", color="blue")  
+                graph.edge("", transitions, color="blue")  
                 continue
             if transitions["isTerminatingState"]:
-                graph.node(state, shape="doublecircle")
+                graph.node(state, shape="doublecircle", color="red")  
             else:
-                graph.node(state, shape="circle")
-                
+                graph.node(state, shape="circle", color="green") 
                 
             for symbol, next_state in transitions.items():
                 if symbol == "isTerminatingState":
                     continue
                 children = next_state.split(",")
                 for child in children:
-                    graph.edge(state, child, label=symbol)
-                    
+                    graph.edge(state, child, label=symbol, color="black")  
+
         graph.format = "png"
-        graph.attr(rankdir="LR",label="DFA's pattern: " + pattern, fontname='bold')
+        graph.attr(rankdir="LR", label="DFA's pattern: " + pattern, fontname='bold', bgcolor='lightyellow')  
         graph.render(name, view=view)
+
         
 
 

@@ -171,10 +171,9 @@ class MIN_DFA:
     def to_graph(self):
         return self.min_dfa_states
 
-    def visualize(self, name="output/min-dfa/min-dfa.gv", view=True,pattern=None):
+    def visualize(self, name="output/min-dfa/min-dfa.gv", view=True, pattern=None):
         graph = graphviz.Digraph(name="MIN_DFA", engine="dot")
-        # print("Minimized DFA States: ", self.min_dfa_states)
-        #! Minimized DFA States:  {'startingState': 1, '1': {'b': '2', 'isTerminatingState': True}, '3': {'a': '1', 'isTerminatingState': False}, '2': {'b': '2', 'isTerminatingState': True}}
+        
         for state, transitions in self.min_dfa_states.items():
             if state == "startingState":
                 # graph.node("", shape="none")
@@ -182,21 +181,20 @@ class MIN_DFA:
                 continue
                 
             if transitions["isTerminatingState"]:
-                graph.node(state, shape="doublecircle")
+                graph.node(state, shape="doublecircle", color="red") 
             else:
-                graph.node(state, shape="circle")
-            
-            
+                graph.node(state, shape="circle", color="green")  
+                
             for symbol, next_state in transitions.items():
                 if symbol == "isTerminatingState":
                     continue
-                    
                 children_states = next_state.split(",")
                 for child in children_states:
-                    graph.edge(state, child, label=symbol)
-                
-        graph._format = "png"
-        graph.attr(rankdir="LR",label="NFA's pattern: " + pattern, fontname='bold')
+                    graph.edge(state, child, label=symbol, color="black") 
+
+        graph.format = "png"
+        graph.attr(rankdir="LR", label="MIN-DFA's pattern: " + pattern, fontname='bold', bgcolor='lightyellow')
         graph.render(name, view=view)
         return graph
+
         

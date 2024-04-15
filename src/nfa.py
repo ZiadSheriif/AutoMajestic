@@ -187,31 +187,31 @@ class NFA:
             **states,
         }
 
-    def visualize(self, pattern,name="output/nfa/nfa.gv", view=False):
+    def visualize(self, pattern, name="output/nfa/nfa.gv", view=False):
         nfa_graph = self.to_graph()
-        graph = graphviz.Digraph(name="NFA",engine="dot")
+        graph = graphviz.Digraph(name="NFA", engine="dot")
 
         for state, transitions in nfa_graph.items():
             if state == "startingState":
                 graph.node("", shape="none")
-                graph.edge("", transitions)
+                graph.edge("", transitions, color="blue")  
                 continue
             if transitions["isTerminatingState"]:
-                graph.node(state, shape="doublecircle")
+                graph.node(state, shape="doublecircle", color="red")  
             else:
-                graph.node(state, shape="circle")
-                
-                
+                graph.node(state, shape="circle", color="green")  
+
             for symbol, next_state in transitions.items():
                 if symbol == "isTerminatingState":
                     continue
                 children = next_state.split(",")
                 for child in children:
-                    graph.edge(state, child, label=symbol)
+                    graph.edge(state, child, label=symbol, color="black") 
 
         graph.format = "png"
-        graph.attr(rankdir="LR",label="NFA's pattern: " + pattern, fontname='bold')
+        graph.attr(rankdir="LR", label="NFA's pattern: " + pattern, fontname='bold', bgcolor='lightyellow')  
         graph.render(name, view=view)
+
         
         # image_data = graph.pipe(format='png')
         # base64_image = base64.b64encode(image_data).decode('utf-8')
