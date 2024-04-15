@@ -34,8 +34,8 @@ class RegexValidator:
                 while regex[j] != "]":
                     if regex[j].isalnum() and regex[j + 1].isalnum():
                         regex = regex[: j + 1] + "|" + regex[j + 1 :]
-                        print("regex[j + 1:]: ", regex[j + 1:])
-                        print("regex[: j + 1]: ", regex[: j + 1])
+                        # print("regex[j + 1:]: ", regex[j + 1:])
+                        # print("regex[: j + 1]: ", regex[: j + 1])
                     j += 1
 
         # then, replace the character class with the new alternation

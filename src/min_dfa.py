@@ -11,9 +11,9 @@ class MIN_DFA:
 
         states = self.dfa.to_graph()
         symbols = self.dfa.get_symbols()
-        print("############################################ Min Dfa #########################################")
-        print("Symbols: ", symbols)
-        print("States: ", states)
+        # print("############################################ Min Dfa #########################################")
+        # print("Symbols: ", symbols)
+        # print("States: ", states)
         # for key in list(states.keys())[1:]:
         #     print(f"{key}: {states[key]}")
         states.pop("startingState")
@@ -56,12 +56,12 @@ class MIN_DFA:
                 i = 0
             if i >= len(all_groups):
                 break    
-            print("\n")
-            print("\n")
-            print("i ==> ",i)
-            print("length ==> ",length)
+            # print("\n")
+            # print("\n")
+            # print("i ==> ",i)
+            # print("length ==> ",length)
             current_group = all_groups[i]
-            print("Current Group: ",current_group)
+            # print("Current Group: ",current_group)
             
             isSplitted = False
             if len(current_group) < 2:
@@ -77,17 +77,17 @@ class MIN_DFA:
                                 for k in range(len(all_groups)):
                                     for state in all_groups[k]:
                                         if (value[symbol] in state):
-                                            print(symbol,current_state, " is looking in group ",k)
+                                            # print(symbol,current_state, " is looking in group ",k)
                                             if symbol not in symbol_groups:
                                                 symbol_groups[symbol] = {}
                                             if k not in symbol_groups[symbol]:
                                                 symbol_groups[symbol][k] = [current_state]
                                             else:
                                                 symbol_groups[symbol][k].append(current_state)
-                                            print(symbol_groups)
+                                            # print(symbol_groups)
 
                             else:
-                                print(symbol,current_state," don't have")
+                                # print(symbol,current_state," don't have")
                                 k = "none"
                                 if symbol not in symbol_groups:
                                     symbol_groups[symbol] = {}
@@ -95,25 +95,25 @@ class MIN_DFA:
                                     symbol_groups[symbol][k] = [current_state]
                                 else:
                                     symbol_groups[symbol][k].append(current_state)
-                                print(symbol_groups)    
+                                # print(symbol_groups)    
                 
                 for key, value in symbol_groups.items():
-                    print("Key: ", key, " value: ", value)
+                    # print("Key: ", key, " value: ", value)
                     # Check if the symbol is present in multiple groups
                     if len(value) > 1:
                         all_groups[i] = []
                         isSplitted = True
                         # Extract states associated with each group
                         for group_index, states in value.items():
-                            print("group_index",group_index)
-                            print("states: ",states)
+                            # print("group_index",group_index)
+                            # print("states: ",states)
                             all_groups.append(states)
                             # Remove original group from all_groups
                         # Insert the extracted states into all_groups and reset i to 0
                         
                         i = -1
                         break
-                print("All groups: ", all_groups) 
+                # print("All groups: ", all_groups) 
                 length = len(all_groups)       
         # Remove empty groups from all_groups            
         all_groups = [group for group in all_groups if group]     
@@ -127,11 +127,11 @@ class MIN_DFA:
         return self.min_dfa_states
 
     def create_minimized_states(self, groups):
-        print("########################################################################################")
-        print("\n\n")
-        print("Groups in MIN_DFA: ", groups)
-        print("########################################################################################")
-        print("\n\n")
+        # print("########################################################################################")
+        # print("\n\n")
+        # print("Groups in MIN_DFA: ", groups)
+        # print("########################################################################################")
+        # print("\n\n")
         #![[{'S2 S3 S5 S6': {'b': 'S4 S6', 'isTerminatingState': True}}], [{'S4 S6': {'isTerminatingState': True}}], [{'S1': {'a': 'S2 S3 S5 S6', 'isTerminatingState': False}}]]
         condensed_states = {}
         # print("Groups in MIN_DFA: ", groups)
@@ -142,7 +142,7 @@ class MIN_DFA:
                 for key, value in state.items():
                     condensed_states[key] = str(idx)
         
-        print("condensed_states: ",condensed_states)
+        # print("condensed_states: ",condensed_states)
         new_groups = {'startingState': 1}
     
         for idx, group in enumerate(groups,start=1):
@@ -153,7 +153,7 @@ class MIN_DFA:
                     # iterate over each symbol in the state
                     for symbol, next_state in value.items():
                         if symbol!='isTerminatingState':
-                            print(next_state)
+                            # print(next_state)
                             # check if the next state is in the condensed states , then update the value of the state
                             if next_state in condensed_states:
                                 value[symbol] = str(condensed_states[next_state])
@@ -162,7 +162,7 @@ class MIN_DFA:
         for state, group_index in condensed_states.items():
             if group_index not in new_groups:
                 new_groups[group_index] = {'isTerminatingState': True}
-        print("New Groups in DFA: ", new_groups)
+        # print("New Groups in DFA: ", new_groups)
         #! New Groups in DFA: {'startingState': 1, '1': {'b': '2', 'isTerminatingState': True}, '3': {'a': '1', 'isTerminatingState': False}}            
         return new_groups
 

@@ -14,8 +14,8 @@ class RegexProcessor:
         create_directory("output/dfa")
         create_directory("output/min-dfa")
 
-        print(f"\033[1;33m{'#' * 30}\n#     Regex Processor     #\n{'#' * 30}\033[0m\n")
-        print(f"Regex: {self.regex}\n")
+        # print(f"\033[1;33m{'#' * 30}\n#     Regex Processor     #\n{'#' * 30}\033[0m\n")
+        # print(f"Regex: {self.regex}\n")
 
         # Validate the regex
         regex_validator = RegexValidator(self.regex)
@@ -29,16 +29,16 @@ class RegexProcessor:
 
         # Convert the regex to an NFA
         nfa = NFA(postfix=postfix_regex)
-        # print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
+        print(f"\033[1;36mNFA: {nfa.to_graph()}\n\033[0m")
         nfa.visualize(name=f"output/nfa/nfa_{idx}.gv", view=False,pattern=self.regex)
 
         # Convert the NFA to a DFA
         dfa = DFA(nfa)
         # print(f"\033[1;36mDFA: {dfa.to_graph()}\n\033[0m")
-        dfa.visualize(name=f"output/dfa/dfa_{idx}.gv", view=False)
+        dfa.visualize(name=f"output/dfa/dfa_{idx}.gv", view=False,pattern=self.regex)
 
         # Minimize the DFA
         minimized_dfa = MIN_DFA(dfa)
-        minimized_dfa.visualize(name=f"output/min-dfa/min-dfa_{idx}.gv", view=False)
+        minimized_dfa.visualize(name=f"output/min-dfa/min-dfa_{idx}.gv", view=False,pattern=self.regex)
 
         return "Success", nfa, minimized_dfa
