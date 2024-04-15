@@ -3,6 +3,9 @@ from utils.helpers import dump_json
 import graphviz
 
 class NFA:
+
+    current_state_number = 1 # static variable to keep track of the state number
+    
     def __init__(self, start=None, accept=None, postfix=None):
         self.start = start
         self.accept = accept
@@ -10,6 +13,12 @@ class NFA:
             self.nfa = self.construct_nfa(postfix)
             self.start = self.nfa.start
             self.accept = self.nfa.accept
+            
+    @staticmethod
+    def get_new_state():
+        state = State("S" + str(NFA.current_state_number))
+        NFA.current_state_number += 1
+        return state 
 
     def get_state_by_label(self, label):
         for state in self.get_states():
@@ -31,10 +40,15 @@ class NFA:
                 if state not in visited:
                     queue.append(state)
                     visited.add(state)
-        
-        states.sort(key=lambda x: x.label)
-        # print("Final Labels of States: ", [state.label for state in states])
+      
+        states= self.rename_states(states)
             
+        return states
+        
+    def rename_states(self,states):
+        for i in range(len(states)):
+            states[i].label = "S" + str(i+1)
+        states.sort(key=lambda x: x.label)
         return states
 
     def get_accepting_states(self):
@@ -69,90 +83,88 @@ class NFA:
         return list(symbols)
         
         
-        
-    def handle_closure(char, nfa_stack, i):
+    # *   
+    def handle_closure(char, nfa_stack):
         state_1 = nfa_stack.pop()
-        start = State("S" + str(i))
-        accept = State("S" + str(i + 1))
+        start =  NFA.get_new_state()
+        accept =  NFA.get_new_state()
         start.add_transition("ε", state_1.start)
         start.add_transition("ε", accept)
         state_1.accept.add_transition("ε", start)
         state_1.accept.add_transition("ε", accept)
         nfa_stack.append(NFA(start, accept))
-        return i + 2 
-        
-    def handle_alternation(char, nfa_stack, i):
+    # |   
+    def handle_alternation(char, nfa_stack):
         state_2 = nfa_stack.pop()
         state_1 = nfa_stack.pop()
-        start = State("S" + str(i))
-        accept = State("S" + str(i + 1))
+        start =  NFA.get_new_state()
+        accept =  NFA.get_new_state()
         start.add_transition("ε", state_1.start)
         start.add_transition("ε", state_2.start)
         state_1.accept.add_transition("ε", accept)
         state_2.accept.add_transition("ε", accept)
         nfa_stack.append(NFA(start, accept))
-        return i + 2
+
         
-        
-    def handle_concatenation(char, nfa_stack, i):
+     # .   
+    def handle_concatenation(char, nfa_stack):
         state_2 = nfa_stack.pop()
         state_1 = nfa_stack.pop()                
         state_1.accept.add_transition("ε", state_2.start)
         nfa_stack.append(NFA(state_1.start, state_2.accept))
-        return i 
-        
-    def handle_positive_closure(char, nfa_stack, i):
+
+     # +   
+    def handle_positive_closure(char, nfa_stack):
         state_1 = nfa_stack.pop()
-        start = State("S" + str(i))
-        accept = State("S" + str(i + 1))
+        start =  NFA.get_new_state()
+        accept =  NFA.get_new_state()
         start.add_transition("ε", state_1.start)
         state_1.accept.add_transition("ε", start)
         state_1.accept.add_transition("ε", accept)
         nfa_stack.append(NFA(start, accept))
-        return i + 2
-        
-    def handle_optional(char, nfa_stack, i):
+
+     # ?   
+    def handle_optional(char, nfa_stack):
         state_1 = nfa_stack.pop()
-        start = State("S" + str(i))
-        accept = State("S" + str(i + 1))
+        start =  NFA.get_new_state()
+        accept =  NFA.get_new_state()
         start.add_transition("ε", state_1.start)
         start.add_transition("ε", accept)
         state_1.accept.add_transition("ε", accept)
         nfa_stack.append(NFA(start, accept))
-        return i + 2
-        
-    def handle_alpha_numeric(char, nfa_stack, i):
-        start = State("S" + str(i))
-        accept = State("S" + str(i + 1))
+
+     # a-z, A-Z, 0-9   
+    def handle_alpha_numeric(char, nfa_stack):
+        start =  NFA.get_new_state()
+        accept =  NFA.get_new_state()
         start.add_transition(char, accept)
         nfa_stack.append(NFA(start, accept))
-        return i + 2
+
 
     def construct_nfa(self, postfix):
         nfa_stack = []
-        i = 1
         for char in postfix:
             if char == "*":
-                i = NFA.handle_closure(char, nfa_stack, i)
-
+                NFA.handle_closure(char, nfa_stack)
             elif char == "|":
-                i = NFA.handle_alternation(char, nfa_stack, i)
+                 NFA.handle_alternation(char, nfa_stack)
             elif char == ".":
-                i = NFA.handle_concatenation(char, nfa_stack, i)
+                 NFA.handle_concatenation(char, nfa_stack)
                 
             elif char == "+":
-                i = NFA.handle_positive_closure(char, nfa_stack, i)
+                 NFA.handle_positive_closure(char, nfa_stack)
             
             elif char == "?":
-                i = NFA.handle_optional(char, nfa_stack, i)
+                 NFA.handle_optional(char, nfa_stack)
             else:
-                i = NFA.handle_alpha_numeric(char, nfa_stack, i)
+                NFA.handle_alpha_numeric(char, nfa_stack)
 
         return nfa_stack.pop()
 
     def to_graph(self):
 
         states = {}
+        print("States: ", [state.label for state in self.get_states()])
         for state in self.get_states():
             state_graph = {
                 "isTerminatingState": state.is_accepting,
@@ -173,7 +185,7 @@ class NFA:
             **states,
         }
 
-    def visualize(self, name="output/nfa/nfa.gv", view=False):
+    def visualize(self, pattern,name="output/nfa/nfa.gv", view=False):
         nfa_graph = self.to_graph()
         graph = graphviz.Digraph(name="NFA",engine="dot")
 
@@ -196,7 +208,7 @@ class NFA:
                     graph.edge(state, child, label=symbol)
 
         graph.format = "png"
-        graph.attr(rankdir="LR")
+        graph.attr(rankdir="LR",label="NFA's pattern: " + pattern, fontname='bold')
         graph.render(name, view=view)
 
         return graph

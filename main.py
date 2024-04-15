@@ -2,12 +2,12 @@ from src.regex_processor import RegexProcessor
 
 if __name__ == "__main__":
     test_cases = [
-        # r"ab[ce-df]",
+        r"ab[ce-df]",
         # r"ab[ce-df",
-        r"ab?",
+        r"ab?ab",
         # r"ab]",
-        # r"aab+a*ba(a|b)",
-        # r"aab+a*ba(a|b)",
+        r"abb+a?(a|b)",
+        r"aab+a*ba?(a|b)",
     ]
 
     for idx, test_case in enumerate(test_cases, start=1):
@@ -16,7 +16,7 @@ if __name__ == "__main__":
         print("Regex:", test_case)
 
         processor = RegexProcessor(test_case)
-        status, nfa, minimized_dfa = processor.process()
+        status, nfa, minimized_dfa = processor.process(idx)
 
         if status == "Success":
             print("Processing successful!")
