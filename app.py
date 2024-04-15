@@ -41,14 +41,14 @@ def run_pipeline(regex, step):
 
     # Convert the regex to an NFA
     nfa = NFA(postfix=postfix_regex)
-    nfa.visualize(name=f"output/nfa/nfa.gv", view=False)
+    nfa.visualize(name=f"output/nfa/nfa.gv", view=False,pattern=regex)
 
     if step == "dfa" or step == "min-dfa":
         dfa = DFA(nfa)
-        dfa.visualize(name=f"output/dfa/dfa.gv", view=False)
+        dfa.visualize(name=f"output/dfa/dfa.gv", view=False,pattern=regex)
         if step == "min-dfa":
             dfa_min = MIN_DFA(dfa)
-            dfa_min.visualize(name="output/min-dfa/min-dfa.gv", view=False)
+            dfa_min.visualize(name="output/min-dfa/min-dfa.gv", view=False,pattern=regex)
             return dfa_min
         return dfa
 

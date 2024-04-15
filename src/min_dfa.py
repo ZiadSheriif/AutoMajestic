@@ -169,7 +169,7 @@ class MIN_DFA:
     def to_graph(self):
         return self.min_dfa_states
 
-    def visualize(self, name="output/min-dfa/min-dfa.gv", view=True):
+    def visualize(self, name="output/min-dfa/min-dfa.gv", view=True,pattern=None):
         graph = graphviz.Digraph(name="MIN_DFA", engine="dot")
         # print("Minimized DFA States: ", self.min_dfa_states)
         #! Minimized DFA States:  {'startingState': 1, '1': {'b': '2', 'isTerminatingState': True}, '3': {'a': '1', 'isTerminatingState': False}, '2': {'b': '2', 'isTerminatingState': True}}
@@ -194,7 +194,7 @@ class MIN_DFA:
                     graph.edge(state, child, label=symbol)
                 
         graph._format = "png"
-        graph.attr(rankdir="LR")
+        graph.attr(rankdir="LR",label="NFA's pattern: " + pattern, fontname='bold')
         graph.render(name, view=view)
         return graph
         

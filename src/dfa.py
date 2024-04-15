@@ -82,7 +82,7 @@ class DFA:
         
 
         
-    def visualize(self, name="output/dfa/dfa.gv", view=True):
+    def visualize(self, name="output/dfa/dfa.gv", view=True,pattern=None):
         graph = graphviz.Digraph(name="DFA", engine="dot")
         
         for state, transitions in self.dfa_states.items():
@@ -105,7 +105,7 @@ class DFA:
                     graph.edge(state, child, label=symbol)
                     
         graph.format = "png"
-        graph.attr(rankdir="LR")
+        graph.attr(rankdir="LR",label="DFA's pattern: " + pattern, fontname='bold')
         graph.render(name, view=view)
         
 
