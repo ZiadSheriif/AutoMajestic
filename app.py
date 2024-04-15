@@ -62,7 +62,6 @@ def compile_regex_pipeline(step):
     automaton = run_pipeline(regex, step)
     if automaton is None:
         return "Invalid regex", 400
-    return jsonify({"Result: ":automaton.to_graph()})
 
     # pdf_to_png(f"output/{step}/{step}.gv.pdf", f"output/{step}/{step}.png")
 
