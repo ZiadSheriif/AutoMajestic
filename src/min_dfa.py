@@ -1,4 +1,4 @@
-from utils.helpers import get_keys_by_group_state
+from utils.helpers import dump_json
 import graphviz
 
 class MIN_DFA:
@@ -123,6 +123,8 @@ class MIN_DFA:
                     
         #! Step 3: Create the minimized DFA
         self.min_dfa_states = self.create_minimized_states(all_groups)
+        
+        dump_json({**self.min_dfa_states}, "output/min-dfa/min-dfa.json")
 
         return self.min_dfa_states
 

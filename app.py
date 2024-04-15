@@ -12,9 +12,9 @@ from utils.helpers import create_directory
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
-# create_directory("output/nfa")
-# create_directory("output/dfa")
-# create_directory("output/min-dfa")
+create_directory("output/nfa")
+create_directory("output/dfa")
+create_directory("output/min-dfa")
 
 
 def pdf_to_png(pdf_path, png_path):
@@ -41,18 +41,18 @@ def run_pipeline(regex, step):
 
     # Convert the regex to an NFA
     nfa = NFA(postfix=postfix_regex)
-    graph,base64_img=nfa.visualize(name=f"output/nfa/nfa.gv", view=False, pattern=regex)
+    nfa.visualize(name=f"output/nfa/nfa.gv", view=False, pattern=regex)
 
     if step == "dfa" or step == "min-dfa":
         dfa = DFA(nfa)
-        # dfa.visualize(name=f"output/dfa/dfa.gv", view=False, pattern=regex)
+        dfa.visualize(name=f"output/dfa/dfa.gv", view=False, pattern=regex)
         if step == "min-dfa":
             dfa_min = MIN_DFA(dfa)
-            # dfa_min.visualize(name="output/min-dfa/min-dfa.gv", view=False, pattern=regex)
+            dfa_min.visualize(name="output/min-dfa/min-dfa.gv", view=False, pattern=regex)
             return dfa_min
         return dfa
 
-    return base64_img
+    return nfa
 
 
 def compile_regex_pipeline(step):
@@ -63,11 +63,11 @@ def compile_regex_pipeline(step):
 
     # pdf_to_png(f"output/{step}/{step}.gv.pdf", f"output/{step}/{step}.png")
 
-    # with open(f"output/{step}/{step}.gv.png", "rb") as f:
-    #     image_data = f.read()
-    #     encoded_image = base64.b64encode(image_data).decode("utf-8")
+    with open(f"output/{step}/{step}.gv.png", "rb") as f:
+        image_data = f.read()
+        encoded_image = base64.b64encode(image_data).decode("utf-8")
 
-    return jsonify({"image": automaton})
+    return jsonify({"image": encoded_image})
 
 
 @app.route("/compile/nfa", methods=["GET"])
@@ -88,12 +88,52 @@ def compile_min_dfa():
 @app.route("/", methods=["GET"])
 def home():
     return """
-    <html>
-        <body style="background-color: #282c34; color: #61dafb; font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-            <h1>Welcome to our server!</h1>
-            <p>This server is powered by Flask and deployed on Vercel. It's designed to compile regular expressions into nondeterministic finite automata.</p>
-        </body>
-    </html>
+<html>
+    <head>
+        <title>AutoMajestic</title>
+        <style>
+            body {
+                 background-color: #1e1e1e;
+                color: #eee;
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 50px;
+            }
+            h1 {
+                color: #61dafb;
+
+            }
+            ul {
+                list-style-type: none;
+                padding-left: 0;
+                margin-top: 20px;
+            }
+            li {
+                margin-bottom: 10px;
+            }
+            p {
+                margin-top: 20px;
+            }
+            footer {
+                margin-top: 50px;
+                color: #777;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Welcome to AutoMajestic!</h1>
+        <p>AutoMajestic is your go-to server for exploring the world of regular expressions and finite automata.</p>
+        <ul>
+            <li>Developed as a part of the Compiler Language course.</li>
+            <li>Project aims to demonstrate the conversion of regular expressions to NFAs and DFAs.</li>
+            <li>Includes visualization of DFA and Minimized DFA (min-DFA).</li>
+        </ul>
+        <footer>
+            &copy; 2024 Ziad & Rome. All rights reserved. Under the supervision of Eng. Omar Samir.
+        </footer>
+    </body>
+</html>
+
     """
 
 

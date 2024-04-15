@@ -209,10 +209,10 @@ class NFA:
                 for child in children:
                     graph.edge(state, child, label=symbol)
 
+        graph.format = "png"
         graph.attr(rankdir="LR",label="NFA's pattern: " + pattern, fontname='bold')
         graph.render(name, view=view)
         
-        image_data = graph.pipe(format='png')
-        base64_image = base64.b64encode(image_data).decode('utf-8')
-
-        return graph, base64_image
+        # image_data = graph.pipe(format='png')
+        # base64_image = base64.b64encode(image_data).decode('utf-8')
+        # return graph

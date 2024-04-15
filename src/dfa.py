@@ -77,7 +77,7 @@ class DFA:
             self.dfa_states.setdefault(current_state, {})["isTerminatingState"] = self.nfa.is_accepting_state_reachable(states_by_label)
 
         # TODO complete the implementation after Eid break :)
-
+        dump_json({**self.dfa_states}, "output/dfa/dfa.json")
         return self.dfa_states
         
 
@@ -111,5 +111,4 @@ class DFA:
 
 
     def to_graph(self):
-        dump_json({**self.dfa_states}, "output/dfa/dfa.json")
         return self.dfa_states
