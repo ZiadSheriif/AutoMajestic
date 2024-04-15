@@ -85,5 +85,9 @@ def compile_min_dfa():
     return compile_regex_pipeline("min-dfa")
 
 
+@app.route("/", methods=["GET"])
+def home():
+    return "Welcome to the server!"
+
 if __name__ == "__main__":
     app.run(port=5000, debug=False)
