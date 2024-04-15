@@ -3,6 +3,7 @@ import json
 
 
 def create_directory(directory):
+    directory = os.path.join('/tmp', directory)
     if not os.path.exists(directory):
         os.makedirs(directory)
 

@@ -12,9 +12,9 @@ from utils.helpers import create_directory
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
-create_directory("output/nfa")
-create_directory("output/dfa")
-create_directory("output/min-dfa")
+# create_directory("output/nfa")
+# create_directory("output/dfa")
+# create_directory("output/min-dfa")
 
 
 def pdf_to_png(pdf_path, png_path):
@@ -45,12 +45,10 @@ def run_pipeline(regex, step):
 
     if step == "dfa" or step == "min-dfa":
         dfa = DFA(nfa)
-        dfa.visualize(name=f"output/dfa/dfa.gv", view=False, pattern=regex)
+        # dfa.visualize(name=f"output/dfa/dfa.gv", view=False, pattern=regex)
         if step == "min-dfa":
             dfa_min = MIN_DFA(dfa)
-            dfa_min.visualize(
-                name="output/min-dfa/min-dfa.gv", view=False, pattern=regex
-            )
+            # dfa_min.visualize(name="output/min-dfa/min-dfa.gv", view=False, pattern=regex)
             return dfa_min
         return dfa
 
