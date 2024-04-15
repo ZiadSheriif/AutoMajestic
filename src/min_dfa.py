@@ -168,7 +168,20 @@ class MIN_DFA:
         #! New Groups in DFA: {'startingState': 1, '1': {'b': '2', 'isTerminatingState': True}, '3': {'a': '1', 'isTerminatingState': False}}            
         return new_groups
 
-    def to_graph(self):
+    def to_graph(self, group_mapping):
+        for state_label, state_info in self.min_dfa_states.items():
+            if state_label == "startingState":
+                continue
+            updated_state_info = {"isTerminatingState": state_info["isTerminatingState"]}
+            for symbol, next_state_label in state_info.items():
+                if symbol == "isTerminatingState":
+                    continue
+                if symbol in group_mapping:
+                    updated_symbol = group_mapping[symbol]
+                else:
+                    updated_symbol = symbol
+                updated_state_info[updated_symbol] = next_state_label
+            self.min_dfa_states[state_label] = updated_state_info
         return self.min_dfa_states
 
     def visualize(self, name="output/min-dfa/min-dfa.gv", view=True, pattern=None):

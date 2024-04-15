@@ -163,7 +163,7 @@ class NFA:
 
         return nfa_stack.pop()
 
-    def to_graph(self):
+    def to_graph(self,group_mapping):
 
         states = {}
         # print("States: ", [state.label for state in self.get_states()])
@@ -172,6 +172,9 @@ class NFA:
                 "isTerminatingState": state.is_accepting,
             }
             for symbol, transition in state.transitions:
+                if symbol != "ε":
+                    if symbol in group_mapping:
+                        symbol = group_mapping[symbol]
                 if symbol not in state_graph:
                     state_graph[symbol] = transition.label
                 else:
@@ -187,8 +190,8 @@ class NFA:
             **states,
         }
 
-    def visualize(self, pattern, name="output/nfa/nfa.gv", view=False):
-        nfa_graph = self.to_graph()
+    def visualize(self, pattern, name="output/nfa/nfa.gv", view=False,group_mapping=None):
+        nfa_graph = self.to_graph(group_mapping)
         graph = graphviz.Digraph(name="NFA", engine="dot")
 
         for state, transitions in nfa_graph.items():

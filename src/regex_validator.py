@@ -5,7 +5,6 @@ class RegexValidator:
     def __init__(self, regex):
         self.regex = regex
         self.postfix = None
-        self.group_mapping = {} 
 
     def validate(self):
         try:
@@ -22,20 +21,22 @@ class RegexValidator:
     # Check if the regular expression contains any character classes (denoted by square brackets).
     # If a character class is found, the function converts it to an "alternation" #!`() between the characters inside the class`.
     # as example: [xyz] => (x|y|z) and [0-9] will be converted to (0|1|2|3|4|5|6|7|8|9) and so on.
-    def replace_class(self,regex):
+    def replace_class(self,regex,group_mapping):
         in_class = False
         result = ""
         current_group = ""
-        alphabet = ord('A')  
+        alphabet = ord('A')
+        # alphabet = ['&', '%', '$', '#', '@', '!', '^', '=', '~', '/', '\\', ':', ';', '<', '>']
         for char in regex:
             if char == '[':
                 in_class = True
                 result += char
             elif char == ']':
                 in_class = False
-                self.group_mapping[chr(alphabet)] = current_group
+                group_mapping[chr(alphabet)] = '[' + current_group+ ']'
                 result += chr(alphabet)+char
                 alphabet += 1
+                current_group = ""
             elif in_class:
                     current_group+= char
             else:
@@ -70,7 +71,7 @@ class RegexValidator:
                     regex = regex[0:j] + temp + regex[j + 2 :]
                     break
         return regex
-    def post_validate(self):
+    def post_validate(self,group_mapping):
         # we will order regular expressions syntax is listed as in the documentation
         # supported regex syntax
         operators = {"(":0,"|": 1, ".": 2, "?": 3, "+": 4, "*": 5}
@@ -79,7 +80,7 @@ class RegexValidator:
         
         
         #! first, replace the character class with a new character class
-        self.postfix = self.replace_class(regex)
+        self.postfix = self.replace_class(regex,group_mapping)
 
         #! then, replace the character class with the new alternation
         self.postfix = self.postfix.replace("[", "(").replace("]", ")")
