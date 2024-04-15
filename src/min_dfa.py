@@ -124,7 +124,7 @@ class MIN_DFA:
         #! Step 3: Create the minimized DFA
         self.min_dfa_states = self.create_minimized_states(all_groups)
         
-        dump_json({**self.min_dfa_states}, "output/min-dfa/min-dfa.json")
+        
 
         return self.min_dfa_states
 
@@ -147,14 +147,14 @@ class MIN_DFA:
     
         groups = sorted(groups, key=sort_key)
 
-        print("All groups in MIN_DFA: ", groups)
+        # print("All groups in MIN_DFA: ", groups)
         for idx, group in enumerate(groups,start=1):
             for state in group:
                 # for all states in the group, update the name of the state to the index of the group
                 for key, value in state.items():
                     condensed_states[key] = str(idx)
         
-        print("condensed_states: ",condensed_states)
+        # print("condensed_states: ",condensed_states)
         new_groups = {'startingState': 1}
     
         for idx, group in enumerate(groups,start=1):
@@ -192,6 +192,7 @@ class MIN_DFA:
                     updated_symbol = symbol
                 updated_state_info[updated_symbol] = next_state_label
             self.min_dfa_states[state_label] = updated_state_info
+        dump_json({**self.min_dfa_states}, "output/min-dfa/min-dfa.json")
         return self.min_dfa_states
 
     def visualize(self, name="output/min-dfa/min-dfa.gv", view=True, pattern=None):

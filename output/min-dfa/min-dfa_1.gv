@@ -1,0 +1,22 @@
+digraph MIN_DFA {
+	"" [shape=none]
+	"" -> 1 [color=blue]
+	1 [color=green shape=circle]
+	1 -> 2 [label=a color=black]
+	2 [color=green shape=circle]
+	2 -> 3 [label=b color=black]
+	3 [color=green shape=circle]
+	3 -> 4 [label="[a-zA-Z]" color=black]
+	4 [color=green shape=circle]
+	4 -> 5 [label=a color=black]
+	5 [color=green shape=circle]
+	5 -> 7 [label="[ac]" color=black]
+	5 -> 6 [label=b color=black]
+	6 [color=green shape=circle]
+	6 -> 7 [label="[ac]" color=black]
+	7 [color=green shape=circle]
+	7 -> 8 [label="[xyz]" color=black]
+	7 -> 7 [label="[ac]" color=black]
+	8 [color=red shape=doublecircle]
+	bgcolor=lightyellow fontname=bold label="MIN-DFA's pattern: ab[a-zA-Z]ab?[ac]+[xyz]" rankdir=LR
+}
