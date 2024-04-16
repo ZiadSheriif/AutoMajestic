@@ -25,17 +25,19 @@ class RegexValidator:
         in_class = False
         result = ""
         current_group = ""
-        alphabet = ord('A')
-        # alphabet = ['&', '%', '$', '#', '@', '!', '^', '=', '~', '/', '\\', ':', ';', '<', '>']
+        # alphabet = ord('A')
+        alphabet = ['&', '%', '$', '#', '@', '!', '^', '=', '~', '/', '\\', ':', ';', '<', '>']
+        idx=0
         for char in regex:
             if char == '[':
                 in_class = True
                 result += char
             elif char == ']':
                 in_class = False
-                group_mapping[chr(alphabet)] = '[' + current_group+ ']'
-                result += chr(alphabet)+char
-                alphabet += 1
+                group_key= alphabet[idx]
+                group_mapping[group_key] = '[' + current_group+ ']'
+                result += group_key+char
+                idx += 1
                 current_group = ""
             elif in_class:
                     current_group+= char
