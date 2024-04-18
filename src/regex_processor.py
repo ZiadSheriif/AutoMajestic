@@ -15,9 +15,6 @@ class RegexProcessor:
         create_directory("output/dfa")
         create_directory("output/min-dfa")
 
-        # print(f"\033[1;33m{'#' * 30}\n#     Regex Processor     #\n{'#' * 30}\033[0m\n")
-        # print(f"Regex: {self.regex}\n")
-
         # Validate the regex
         regex_validator = RegexValidator(self.regex)
 

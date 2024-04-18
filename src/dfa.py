@@ -27,7 +27,7 @@ class DFA:
         closure.sort(key=lambda x: x.label)
 
         closure = " ".join([state.label for state in closure])
-        # print("closure: ", closure)
+
         return closure
 
     def _move(self, state, symbol):
@@ -37,7 +37,6 @@ class DFA:
         states_list = []
         for label in states:
             state = self.nfa.get_state_by_label(label)
-            # print("State in Move!: ", state.label)
             states_list.append(state)
         for state in states_list:
             for s, next_state in state.transitions:
@@ -46,10 +45,8 @@ class DFA:
         return next_states
     
     def construct_dfa(self):
-        dfa_transitions = {}
         symbols = self.nfa.get_symbols()
         dfa_start = self._epsilon_closure([self.nfa.start])
-        # print("First Epsilon Closure: ", dfa_start)
         self.dfa_states = {'startingState': dfa_start}
 
         queue = deque([dfa_start])
@@ -57,16 +54,12 @@ class DFA:
 
         while queue:
             current_state = queue.popleft()
-            # print("current_state: ", current_state)
             for symbol in symbols:
                 next_moves = self._move(current_state, symbol)
                 if not next_moves:
                     continue
                 next_states = self._epsilon_closure(next_moves)
-                # print("Current State: ", current_state)
-                # print("Symbol: ", symbol)
-                # print("Moves: ", [state.label for state in next_moves])
-                # print("Epsilon Closures: ", next_states)
+                
                 if next_states == " " or next_states == "":
                     continue
                 if next_states not in visited:

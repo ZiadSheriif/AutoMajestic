@@ -59,13 +59,6 @@ class RegexValidator:
                     temp = ""
                     end = ord(regex[j + 1])
                     start = ord(regex[j - 1])
-                    # print statement in the code. It is not currently active and does not affect the
-                    # functionality of the code.
-                    # print("start: ", start)
-                    # print("end: ", end)
-                    # print("regex[j]: ", self.postfix)
-                    # print("regex[j - 1]: ", self.postfix[j - 1])
-                    # print("regex[j + 1]: ", self.postfix[j + 1])
                     for z in range(int(end - start)):
                         temp += "|"
                         char = chr(start + z + 1)
@@ -134,5 +127,4 @@ class RegexValidator:
             postfix += stack.pop()
 
         # print("final postfix: ", postfix)
-        # return "a.b?.a.b."
         return postfix

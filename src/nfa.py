@@ -34,10 +34,7 @@ class NFA:
         visited.add(self.start)
         while queue:
             current_state = queue.pop(0)
-            # print("state: ", current_state.label)
-            # print ("Transitions of current state: ", [state.label for symbol, state in current_state.transitions])
             states.append(current_state)
-            # print("Labels of States: ", [state.label for state in states])
             for _,state in current_state.transitions:
                 if state not in visited:
                     queue.append(state)
@@ -59,7 +56,6 @@ class NFA:
 
     # check if one accpeting state is reachable from another accepting state
     def is_accepting_state_reachable(self,states):
-        # print("States in is_accepting_state_reachable: ", states)
         for state in states:
             if state.is_accepting:
                 return True
@@ -81,7 +77,6 @@ class NFA:
             for symbol, _ in state.transitions:
                 if symbol != "ε":
                     symbols.add(symbol)
-        # print("Symbols: ", list(symbols))
         return list(symbols)
         
         
@@ -166,7 +161,6 @@ class NFA:
     def to_graph(self,group_mapping):
 
         states = {}
-        # print("States: ", [state.label for state in self.get_states()])
         for state in self.get_states():
             state_graph = {
                 "isTerminatingState": state.is_accepting,
@@ -212,7 +206,7 @@ class NFA:
                     graph.edge(state, child, label=symbol, color="black") 
 
         graph.format = "png"
-        graph.attr(rankdir="LR", label="NFA's pattern: " + pattern, fontname='bold', bgcolor='lightyellow')  
+        graph.attr(rankdir="LR", label="NFA's pattern: " + pattern, fontname='bold', bgcolor='lightyellow',format='png')  
         graph.render(name, view=view)
 
         
